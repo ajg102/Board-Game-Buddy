@@ -1,0 +1,76 @@
+import { StyleSheet } from "react-native";
+import { size } from "../../helpers/normalize";
+
+export const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  rowItem: {
+    width: "90%",
+    height: size(64),
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-evenly",
+    borderWidth: 1,
+    alignSelf: "center",
+    margin: 8,
+  },
+  helperText: {
+    alignSelf: "center",
+    textAlign: "center",
+    width: "90%",
+  },
+  button: {
+    width: "90%",
+    alignSelf: "center",
+    height: 54,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 8,
+    backgroundColor: "blue",
+    position: "absolute",
+    bottom: 40,
+  },
+  buttonText: { fontSize: 24, color: "white", fontWeight: "bold" },
+  clockItem: {
+    width: "95%",
+    height: "40%",
+    alignSelf: "center",
+    backgroundColor: "#bbb",
+    borderRadius: 16,
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: 8,
+    margin: 8,
+    elevation: 5,
+    shadowColor: "black",
+    shadowOffset: { width: 3, height: 4 },
+    shadowOpacity: 0.6,
+    shadowRadius: 3,
+  },
+  clockItemTime: {
+    fontSize: 48,
+    color: "white",
+    fontWeight: "bold",
+    letterSpacing: 1.2,
+  },
+  clockItemMoves: {
+    fontSize: 28,
+    color: "white",
+    fontWeight: "bold",
+    letterSpacing: 1.2,
+  },
+  clockMenu: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: "100%",
+    height: "15%",
+    justifyContent: "space-evenly",
+  },
+  clockMenuItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: "33%",
+    justifyContent: "center",
+  },
+});
