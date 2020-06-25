@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "game_tools",
+    "name": "Board Game Buddy",
     "slug": "game_tools",
     "platforms": ["ios", "android", "web"],
     "version": "1.0.0",
@@ -8,8 +8,8 @@
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "resizeMode": "cover",
+      "backgroundColor": "#000000"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -25,7 +25,12 @@
     },
     "android": {
       "package": "com.gametools",
-      "versionCode": 1
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/android_icon.png",
+        "backgroundImage": "./assets/android_background.png",
+        "backgroundColor": "#fff"
+      }
     }
   }
 }

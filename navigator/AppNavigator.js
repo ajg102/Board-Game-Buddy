@@ -15,11 +15,17 @@ import {
   Settings,
   Sketch,
   Hearts,
+  Darts,
+  //Bracket,
+  //BracketList,
+  //CreateBracket,
+  Spades,
 } from "../screens/index";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { MaterialHeaderButton } from "../components/NavHeaderButtons";
 import CustomDrawer from "../components/Drawer/Drawer";
-import { Platform } from "react-native";
+import { Platform, StyleSheet } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 
 const SettingsNav = createStackNavigator();
 const LifePointsNav = createStackNavigator();
@@ -32,12 +38,15 @@ const ChessTimerNav = createStackNavigator();
 const DnDNav = createStackNavigator();
 const SketchNav = createStackNavigator();
 const HeartsNav = createStackNavigator();
+const DartsNav = createStackNavigator();
+//const BracketNav = createStackNavigator();
+const SpadesNav = createStackNavigator();
 const DrawerNav = createDrawerNavigator();
 
 const getDefaultScreenOptions = () => {
   return {
     gesturesEnabled: false,
-    headerTintColor: Platform.OS === "ios" ? "black" : "white",
+    headerTintColor: Platform.OS === "ios" ? "white" : "white",
     headerStyle: {
       backgroundColor: Platform.OS === "ios" ? "white" : "black",
     },
@@ -143,11 +152,73 @@ const HeartsStack = () => (
   </HeartsNav.Navigator>
 );
 
+const DartsStack = () => (
+  <DartsNav.Navigator screenOptions={getDefaultScreenOptions()}>
+    <DartsNav.Screen
+      name="stack_11"
+      component={Darts}
+      options={screenOptions}
+    />
+  </DartsNav.Navigator>
+);
+
+// const BracketStack = () => (
+//   <BracketNav.Navigator screenOptions={getDefaultScreenOptions()}>
+//     <BracketNav.Screen
+//       name="stack_12"
+//       component={BracketList}
+//       options={screenOptions}
+//     />
+//     <BracketNav.Screen
+//       name="bracket_view"
+//       component={Bracket}
+//       options={({ navigation, route }) => {
+//         return {
+//           headerBackground: () => (
+//             <LinearGradient
+//               colors={["#FE6B8B", "#FF8E53"]}
+//               locations={[0.3, 0.9]}
+//               style={StyleSheet.absoluteFill}
+//             />
+//           ),
+//         };
+//       }}
+//     />
+//     <BracketNav.Screen
+//       name="bracket_add"
+//       component={CreateBracket}
+//       options={({ navigation, route }) => {
+//         return {
+//           headerTitle: "New Bracket",
+//           headerBackground: () => (
+//             <LinearGradient
+//               colors={["#FE6B8B", "#FF8E53"]}
+//               locations={[0.3, 0.9]}
+//               style={StyleSheet.absoluteFill}
+//             />
+//           ),
+//         };
+//       }}
+//     />
+//   </BracketNav.Navigator>
+// );
+
+const SpadesStack = () => (
+  <SpadesNav.Navigator screenOptions={getDefaultScreenOptions()}>
+    <SpadesNav.Screen
+      name="stack_13"
+      component={Spades}
+      options={screenOptions}
+    />
+  </SpadesNav.Navigator>
+);
+
 const screenOptions = ({ navigation, route }) => {
   let headerTitle = "";
   switch (route.name) {
     case "stack_0":
-      headerTitle = "Settings";
+      //headerTitle = "Settings";
+      headerTitle = "";
       break;
     case "stack_1":
       headerTitle = "Life Points";
@@ -179,11 +250,23 @@ const screenOptions = ({ navigation, route }) => {
     case "stack_10":
       headerTitle = "Hearts";
       break;
+    case "stack_11":
+      headerTitle = "Darts";
+      break;
+    // case "stack_12":
+    //   headerTitle = "Brackets";
+    //   break;
+    case "stack_13":
+      headerTitle = "Spades";
+      break;
     default:
       headerTitle = "";
   }
   return {
     headerTitle,
+    headerTitleStyle: {
+      fontFamily: "open-sans-extra-bold",
+    },
     headerLeft: () => (
       <HeaderButtons HeaderButtonComponent={MaterialHeaderButton}>
         <Item
@@ -192,6 +275,13 @@ const screenOptions = ({ navigation, route }) => {
           onPress={() => navigation.toggleDrawer()}
         />
       </HeaderButtons>
+    ),
+    headerBackground: () => (
+      <LinearGradient
+        colors={["#FE6B8B", "#FF8E53"]}
+        locations={[0.3, 0.9]}
+        style={StyleSheet.absoluteFill}
+      />
     ),
   };
 };
@@ -209,6 +299,9 @@ const Drawer = () => (
     <DrawerNav.Screen name="DnD" component={DnDStack} />
     <DrawerNav.Screen name="Sketch" component={SketchStack} />
     <DrawerNav.Screen name="Hearts" component={HeartsStack} />
+    <DrawerNav.Screen name="Darts" component={DartsStack} />
+    {/* <DrawerNav.Screen name="Bracket" component={BracketStack} /> */}
+    <DrawerNav.Screen name="Spades" component={SpadesStack} />
   </DrawerNav.Navigator>
 );
 

@@ -4,6 +4,7 @@ import ButtonToggle from "../../components/ButtonToggle/ButtonToggle";
 import TimePicker from "./TimePicker";
 import { styles } from "./styles";
 import { useDispatch, useSelector } from "react-redux";
+import { LinearGradient } from "expo-linear-gradient";
 
 const formatNumber = (number) => `0${number}`.slice(-2);
 
@@ -21,9 +22,6 @@ const formatTime = (time) => {
 const ChessTimer = (props) => {
   const { navigation } = props;
   const dispatch = useDispatch();
-  // useEffect(() => {
-  //   dispatch({ type: "RESET:CHESS" });
-  // });
   const [mode, setMode] = useState("normal");
   const [modifier, setModifier] = useState("delay");
   const [editing, setEditing] = useState(null);
@@ -98,8 +96,8 @@ const ChessTimer = (props) => {
           style={styles.rowItem}
           onPress={() => setEditing("SET_INITIAL_TIME")}
         >
-          <Text>GAME IN</Text>
-          <Text>{`${
+          <Text style={styles.timerMenuText}>GAME IN</Text>
+          <Text style={styles.timerMenuText}>{`${
             formattedTime.hours !== "00" ? formattedTime.hours + ":" : ""
           }${formattedTime.mins}:${formattedTime.secs}`}</Text>
         </TouchableOpacity>
@@ -109,8 +107,8 @@ const ChessTimer = (props) => {
             style={styles.rowItem}
             onPress={() => setEditing("SET_WHITE_TIME")}
           >
-            <Text>WHITE TIME</Text>
-            <Text>{`${
+            <Text style={styles.timerMenuText}>WHITE TIME</Text>
+            <Text style={styles.timerMenuText}>{`${
               formattedWhite.hours !== "00" ? formattedWhite.hours + ":" : ""
             }${formattedWhite.mins}:${formattedWhite.secs}`}</Text>
           </TouchableOpacity>
@@ -118,8 +116,8 @@ const ChessTimer = (props) => {
             style={styles.rowItem}
             onPress={() => setEditing("SET_BLACK_TIME")}
           >
-            <Text>BLACK TIME</Text>
-            <Text>{`${
+            <Text style={styles.timerMenuText}>BLACK TIME</Text>
+            <Text style={styles.timerMenuText}>{`${
               formattedBlack.hours !== "00" ? formattedBlack.hours + ":" : ""
             }${formattedBlack.mins}:${formattedBlack.secs}`}</Text>
           </TouchableOpacity>
@@ -137,8 +135,8 @@ const ChessTimer = (props) => {
         style={styles.rowItem}
         onPress={() => setEditing("SET_MODIFIER")}
       >
-        <Text>MODIFIER</Text>
-        <Text>
+        <Text style={styles.timerMenuText}>MODIFIER</Text>
+        <Text style={styles.timerMenuText}>
           {modifier === "increment" ? "Increment" : "Delay"}{" "}
           {`${
             formattedModifier.hours !== "00"
@@ -152,8 +150,14 @@ const ChessTimer = (props) => {
           ? "Add some extra time at the beginning of each players turn."
           : "Wait some time before beginning the timer at the start of a player's turn."}
       </Text>
-      <TouchableOpacity style={styles.button} onPress={onPlayHandler}>
-        <Text style={styles.buttonText}>PLAY!</Text>
+      <TouchableOpacity onPress={onPlayHandler} style={styles.button}>
+        <LinearGradient
+          colors={["#FE6B8B", "#FF8E53"]}
+          locations={[0.3, 0.9]}
+          style={styles.buttonBackground}
+        >
+          <Text style={styles.buttonText}>PLAY!</Text>
+        </LinearGradient>
       </TouchableOpacity>
       <TimePicker
         visible={Boolean(editing)}

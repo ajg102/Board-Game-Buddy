@@ -26,7 +26,7 @@ const DiceRoll = (props) => {
   useEffect(() => {
     const result = getResultTotal();
     setTotal(result);
-  }, [numRolls]);
+  }, [numDie]);
 
   const addDie = () => {
     setNumDie((prev) => [...prev, React.createRef()]);
@@ -41,13 +41,13 @@ const DiceRoll = (props) => {
 
   const rollAll = () => {
     setIsRolling(true);
-    numDie.forEach((ref) => {
-      ref.current.roll();
-    });
-    setTimeout(() => {
-      setNumRolls((prev) => prev + 1);
-      setIsRolling(false);
-    }, 300);
+    const rolls = numDie.map((ref) => ref.current.rollDieAsync());
+    Promise.all(rolls)
+      .then(() => {
+        setTotal(getResultTotal());
+        setIsRolling(false);
+      })
+      .catch((err) => console.log(err));
   };
 
   const getResultTotal = () => {
@@ -64,30 +64,32 @@ const DiceRoll = (props) => {
         <Text style={styles.resultsText}>Result Total:</Text>
         <Text style={styles.resultsText}>{!isRolling ? total : ""}</Text>
       </View>
-
-      <TouchableOpacity onPress={rollAll}>
-        <LinearGradient
-          colors={["#FE6B8B", "#FF8E53"]}
-          locations={[0.3, 0.9]}
-          style={styles.rollButton}
-        >
-          <Text style={styles.buttonText}>ROLL ALL</Text>
-        </LinearGradient>
-      </TouchableOpacity>
-      <View>
-        <ScrollView
-          contentContainerStyle={{
-            flexDirection: "row",
-            flexWrap: "wrap",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          {numDie.map((itemRef, index) => (
-            <Die ref={itemRef} key={`${index}`} />
-          ))}
-        </ScrollView>
-        <View style={{ height: 60 }} />
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{
+          flexDirection: "row",
+          flexWrap: "wrap",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        {numDie.map((itemRef, index) => (
+          <Die ref={itemRef} key={`${index}`} />
+        ))}
+        <View style={{ height: 100, width: "100%" }} />
+      </ScrollView>
+      <View style={{ height: 96, width: "100%" }}>
+        {!isRolling && (
+          <TouchableOpacity onPress={rollAll} style={styles.button}>
+            <LinearGradient
+              colors={["#FE6B8B", "#FF8E53"]}
+              locations={[0.3, 0.9]}
+              style={styles.buttonBackground}
+            >
+              <Text style={styles.buttonText}>ROLL ALL</Text>
+            </LinearGradient>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );

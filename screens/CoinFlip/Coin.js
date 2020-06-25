@@ -5,8 +5,9 @@ import {
   Animated,
   TouchableWithoutFeedback,
   Easing,
+  Image,
 } from "react-native";
-import { styles, sizeCoins } from "./styles";
+import { styles, sizeCoins, coinFaceSets } from "./styles";
 
 class Coin extends Component {
   constructor(props) {
@@ -14,9 +15,40 @@ class Coin extends Component {
     this.flip = new Animated.Value(0);
   }
 
+  state = {
+    value: 0, //0 = heads,
+    set: "og",
+  };
+
+  flipCoinAsync = async () => {
+    const promise = new Promise((resolve) => {
+      this.flip.setValue(0);
+      this.props.onStartFlip();
+      const headsOrTails = Math.floor(Math.random() * 2);
+      Animated.sequence([
+        Animated.timing(this.flip, {
+          duration: 500,
+          toValue: 4,
+          easing: Easing.linear,
+          useNativeDriver: true,
+        }),
+        Animated.spring(this.flip, {
+          useNativeDriver: true,
+          toValue: headsOrTails === 0 ? 4 : 5,
+        }),
+      ]).start(() => {
+        this.setState({ value: headsOrTails });
+        //this.props.onFlipFinished();
+        resolve();
+      });
+    });
+    return promise;
+  };
+
   flipCoin = () => {
     this.flip.setValue(0);
     this.props.onStartFlip();
+    const headsOrTails = Math.floor(Math.random() * 2);
     Animated.sequence([
       Animated.timing(this.flip, {
         duration: 500,
@@ -26,9 +58,10 @@ class Coin extends Component {
       }),
       Animated.spring(this.flip, {
         useNativeDriver: true,
-        toValue: Math.floor(Math.random() * 2) === 0 ? 4 : 5,
+        toValue: headsOrTails === 0 ? 4 : 5,
       }),
     ]).start(() => {
+      this.setState({ value: headsOrTails });
       this.props.onFlipFinished();
     });
   };
@@ -51,9 +84,13 @@ class Coin extends Component {
               { transform: [{ rotateX: front }] },
             ]}
           >
-            <Text style={styles.labelStyle}>
+            {/* <Text style={styles.labelStyle}>
               {this.props.numCoins > 4 ? "H" : "HEADS"}
-            </Text>
+            </Text> */}
+            <Image
+              source={coinFaceSets[this.state.set].heads}
+              style={{ width: "100%", height: "100%", resizeMode: "cover" }}
+            />
           </Animated.View>
           <Animated.View
             style={[
@@ -63,9 +100,13 @@ class Coin extends Component {
               { transform: [{ rotateX: back }] },
             ]}
           >
-            <Text style={styles.labelStyle}>
+            <Image
+              source={coinFaceSets[this.state.set].tails}
+              style={{ width: "100%", height: "100%", resizeMode: "cover" }}
+            />
+            {/* <Text style={styles.labelStyle}>
               {this.props.numCoins > 4 ? "T" : "TAILS"}
-            </Text>
+            </Text> */}
           </Animated.View>
         </View>
       </TouchableWithoutFeedback>

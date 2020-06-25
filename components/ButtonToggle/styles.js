@@ -9,7 +9,7 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "blue",
+    borderColor: "#FE6B8B",
     backgroundColor: "white",
     alignSelf: "center",
     margin: 8,
@@ -26,7 +26,16 @@ export const styles = StyleSheet.create({
     alignItems: "center",
   },
   text: {
-    color: "blue",
+    color: "#FE6B8B",
     fontWeight: "normal",
+    fontFamily: "open-sans-bold",
+  },
+  gradient: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: 0,
+    height: "100%",
+    borderRadius: 4,
   },
 });

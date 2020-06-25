@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import {
   View,
   ScrollView,
@@ -6,14 +6,18 @@ import {
   TouchableOpacity,
   Animated,
   Dimensions,
+  BackHandler,
 } from "react-native";
 import Die from "./Die";
 import { styles } from "./styles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
+import { useFocusEffect } from "@react-navigation/native";
 
 const DnD = (props) => {
   const [dieRefs, setDieRefs] = useState([]);
   const [numRolls, setNumRolls] = useState(0);
+  const [isRolling, setIsRolling] = useState(false);
   const [result, setResult] = useState("");
   const [mode, setMode] = useState("roll");
   const [d4, setD4] = useState(0);
@@ -22,11 +26,27 @@ const DnD = (props) => {
   const [d10, setD10] = useState(0);
   const [d12, setD12] = useState(0);
   const [d20, setD20] = useState(0);
+  const [d100, setD100] = useState(0);
 
   useEffect(() => {
     const res = getResultTotal();
     setResult(res);
-  }, [numRolls, dieRefs.length]);
+  }, [dieRefs.length]);
+
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        if (mode === "add") {
+          setMode("roll");
+          return true;
+        } else return false;
+      };
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+
+      return () =>
+        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+    }, [mode])
+  );
 
   const modeChangeHandler = () => {
     if (mode === "roll") {
@@ -65,6 +85,8 @@ const DnD = (props) => {
       case "d20":
         setD20((prev) => prev + 1);
         break;
+      case "d100":
+        setD100((prev) => prev + 1);
       default:
         return;
     }
@@ -95,18 +117,22 @@ const DnD = (props) => {
       case "d20":
         setD20((prev) => prev - 1);
         break;
+      case "d100":
+        setD100((prev) => prev - 1);
       default:
         return;
     }
   };
 
   const rollHandler = () => {
-    dieRefs.forEach((die) => {
-      die.ref.current.roll();
-    });
-    setTimeout(() => {
-      setNumRolls((prev) => prev + 1);
-    }, 300);
+    setIsRolling(true);
+    const rolls = dieRefs.map((die) => die.ref.current.rollAsync());
+    Promise.all(rolls)
+      .then(() => {
+        setResult(getResultTotal());
+        setIsRolling(false);
+      })
+      .catch((err) => console.log(err));
   };
 
   const getResultTotal = () => {
@@ -142,7 +168,13 @@ const DnD = (props) => {
               style={styles.changeNumberButton}
               onPress={() => addDieHandler("d4")}
             >
-              <MaterialCommunityIcons name="plus" size={30} color="white" />
+              <LinearGradient
+                colors={["#FE6B8B", "#FF8E53"]}
+                locations={[0.3, 0.9]}
+                style={styles.buttonBackground}
+              >
+                <MaterialCommunityIcons name="plus" size={30} color="white" />
+              </LinearGradient>
             </TouchableOpacity>
             <View style={styles.dieItem}>
               <Die type="d4" />
@@ -152,7 +184,13 @@ const DnD = (props) => {
               style={styles.changeNumberButton}
               onPress={() => removeDieHandler("d4")}
             >
-              <MaterialCommunityIcons name="minus" size={30} color="white" />
+              <LinearGradient
+                colors={["#FE6B8B", "#FF8E53"]}
+                locations={[0.3, 0.9]}
+                style={styles.buttonBackground}
+              >
+                <MaterialCommunityIcons name="minus" size={30} color="white" />
+              </LinearGradient>
             </TouchableOpacity>
           </View>
           <View style={styles.diceItemContainer}>
@@ -160,7 +198,13 @@ const DnD = (props) => {
               style={styles.changeNumberButton}
               onPress={() => addDieHandler("d6")}
             >
-              <MaterialCommunityIcons name="plus" size={30} color="white" />
+              <LinearGradient
+                colors={["#FE6B8B", "#FF8E53"]}
+                locations={[0.3, 0.9]}
+                style={styles.buttonBackground}
+              >
+                <MaterialCommunityIcons name="plus" size={30} color="white" />
+              </LinearGradient>
             </TouchableOpacity>
             <View style={styles.dieItem}>
               <Die type="d6" />
@@ -170,7 +214,13 @@ const DnD = (props) => {
               style={styles.changeNumberButton}
               onPress={() => removeDieHandler("d6")}
             >
-              <MaterialCommunityIcons name="minus" size={30} color="white" />
+              <LinearGradient
+                colors={["#FE6B8B", "#FF8E53"]}
+                locations={[0.3, 0.9]}
+                style={styles.buttonBackground}
+              >
+                <MaterialCommunityIcons name="minus" size={30} color="white" />
+              </LinearGradient>
             </TouchableOpacity>
           </View>
           <View style={styles.diceItemContainer}>
@@ -178,7 +228,13 @@ const DnD = (props) => {
               style={styles.changeNumberButton}
               onPress={() => addDieHandler("d8")}
             >
-              <MaterialCommunityIcons name="plus" size={30} color="white" />
+              <LinearGradient
+                colors={["#FE6B8B", "#FF8E53"]}
+                locations={[0.3, 0.9]}
+                style={styles.buttonBackground}
+              >
+                <MaterialCommunityIcons name="plus" size={30} color="white" />
+              </LinearGradient>
             </TouchableOpacity>
             <View style={styles.dieItem}>
               <Die type="d8" />
@@ -188,7 +244,13 @@ const DnD = (props) => {
               style={styles.changeNumberButton}
               onPress={() => removeDieHandler("d8")}
             >
-              <MaterialCommunityIcons name="minus" size={30} color="white" />
+              <LinearGradient
+                colors={["#FE6B8B", "#FF8E53"]}
+                locations={[0.3, 0.9]}
+                style={styles.buttonBackground}
+              >
+                <MaterialCommunityIcons name="minus" size={30} color="white" />
+              </LinearGradient>
             </TouchableOpacity>
           </View>
           <View style={styles.diceItemContainer}>
@@ -196,7 +258,13 @@ const DnD = (props) => {
               style={styles.changeNumberButton}
               onPress={() => addDieHandler("d10")}
             >
-              <MaterialCommunityIcons name="plus" size={30} color="white" />
+              <LinearGradient
+                colors={["#FE6B8B", "#FF8E53"]}
+                locations={[0.3, 0.9]}
+                style={styles.buttonBackground}
+              >
+                <MaterialCommunityIcons name="plus" size={30} color="white" />
+              </LinearGradient>
             </TouchableOpacity>
             <View style={styles.dieItem}>
               <Die type="d10" />
@@ -206,7 +274,13 @@ const DnD = (props) => {
               style={styles.changeNumberButton}
               onPress={() => removeDieHandler("d10")}
             >
-              <MaterialCommunityIcons name="minus" size={30} color="white" />
+              <LinearGradient
+                colors={["#FE6B8B", "#FF8E53"]}
+                locations={[0.3, 0.9]}
+                style={styles.buttonBackground}
+              >
+                <MaterialCommunityIcons name="minus" size={30} color="white" />
+              </LinearGradient>
             </TouchableOpacity>
           </View>
           <View style={styles.diceItemContainer}>
@@ -214,7 +288,13 @@ const DnD = (props) => {
               style={styles.changeNumberButton}
               onPress={() => addDieHandler("d12")}
             >
-              <MaterialCommunityIcons name="plus" size={30} color="white" />
+              <LinearGradient
+                colors={["#FE6B8B", "#FF8E53"]}
+                locations={[0.3, 0.9]}
+                style={styles.buttonBackground}
+              >
+                <MaterialCommunityIcons name="plus" size={30} color="white" />
+              </LinearGradient>
             </TouchableOpacity>
             <View style={styles.dieItem}>
               <Die type="d12" />
@@ -224,7 +304,13 @@ const DnD = (props) => {
               style={styles.changeNumberButton}
               onPress={() => removeDieHandler("d12")}
             >
-              <MaterialCommunityIcons name="minus" size={30} color="white" />
+              <LinearGradient
+                colors={["#FE6B8B", "#FF8E53"]}
+                locations={[0.3, 0.9]}
+                style={styles.buttonBackground}
+              >
+                <MaterialCommunityIcons name="minus" size={30} color="white" />
+              </LinearGradient>
             </TouchableOpacity>
           </View>
           <View style={styles.diceItemContainer}>
@@ -232,7 +318,13 @@ const DnD = (props) => {
               style={styles.changeNumberButton}
               onPress={() => addDieHandler("d20")}
             >
-              <MaterialCommunityIcons name="plus" size={30} color="white" />
+              <LinearGradient
+                colors={["#FE6B8B", "#FF8E53"]}
+                locations={[0.3, 0.9]}
+                style={styles.buttonBackground}
+              >
+                <MaterialCommunityIcons name="plus" size={30} color="white" />
+              </LinearGradient>
             </TouchableOpacity>
             <View style={styles.dieItem}>
               <Die type="d20" />
@@ -242,7 +334,43 @@ const DnD = (props) => {
               style={styles.changeNumberButton}
               onPress={() => removeDieHandler("d20")}
             >
-              <MaterialCommunityIcons name="minus" size={30} color="white" />
+              <LinearGradient
+                colors={["#FE6B8B", "#FF8E53"]}
+                locations={[0.3, 0.9]}
+                style={styles.buttonBackground}
+              >
+                <MaterialCommunityIcons name="minus" size={30} color="white" />
+              </LinearGradient>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.diceItemContainer}>
+            <TouchableOpacity
+              style={styles.changeNumberButton}
+              onPress={() => addDieHandler("d100")}
+            >
+              <LinearGradient
+                colors={["#FE6B8B", "#FF8E53"]}
+                locations={[0.3, 0.9]}
+                style={styles.buttonBackground}
+              >
+                <MaterialCommunityIcons name="plus" size={30} color="white" />
+              </LinearGradient>
+            </TouchableOpacity>
+            <View style={styles.dieItem}>
+              <Die type="d100" />
+              <Text style={styles.dieCountText}>{`${d100}d100`}</Text>
+            </View>
+            <TouchableOpacity
+              style={styles.changeNumberButton}
+              onPress={() => removeDieHandler("d100")}
+            >
+              <LinearGradient
+                colors={["#FE6B8B", "#FF8E53"]}
+                locations={[0.3, 0.9]}
+                style={styles.buttonBackground}
+              >
+                <MaterialCommunityIcons name="minus" size={30} color="white" />
+              </LinearGradient>
             </TouchableOpacity>
           </View>
           <View style={{ height: 150 }} />
@@ -264,7 +392,7 @@ const DnD = (props) => {
       </TouchableOpacity>
       <View style={styles.resultsContainer}>
         <Text style={styles.resultsText}>Result:</Text>
-        <Text style={styles.resultsText}>{result}</Text>
+        <Text style={styles.resultsText}>{!isRolling ? result : ""}</Text>
       </View>
 
       <ScrollView
@@ -284,9 +412,15 @@ const DnD = (props) => {
         style={styles.button}
         onPress={mode === "roll" ? rollHandler : modeChangeHandler}
       >
-        <Text style={styles.buttonText}>
-          {mode === "roll" ? "Roll" : "Done"}
-        </Text>
+        <LinearGradient
+          colors={["#FE6B8B", "#FF8E53"]}
+          locations={[0.3, 0.9]}
+          style={styles.buttonBackground}
+        >
+          <Text style={styles.buttonText}>
+            {mode === "roll" ? "Roll" : "Done"}
+          </Text>
+        </LinearGradient>
       </TouchableOpacity>
     </View>
   );

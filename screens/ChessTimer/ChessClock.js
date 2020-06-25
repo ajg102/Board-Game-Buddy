@@ -13,6 +13,7 @@ import { styles } from "./styles";
 import { useFocusEffect } from "@react-navigation/native";
 import { size } from "../../helpers/normalize";
 import { useKeepAwake } from "expo-keep-awake";
+import { LinearGradient } from "expo-linear-gradient";
 
 const formatNumber = (number) => `0${number}`.slice(-2);
 
@@ -217,12 +218,24 @@ const ClockItem = ({
       style={[
         styles.clockItem,
         {
-          backgroundColor: active ? "blue" : styles.clockItem.backgroundColor,
+          //backgroundColor: active ? "blue" : styles.clockItem.backgroundColor,
           transform: [{ rotate: color === "black" ? "180deg" : "0deg" }],
         },
       ]}
     >
-      <MaterialCommunityIcons name={"chess-queen"} size={36} color={color} />
+      {active && (
+        <LinearGradient
+          colors={["#FE6B8B", "#FF8E53"]}
+          locations={[0.3, 0.9]}
+          style={styles.clockFaceLinearGradient}
+        />
+      )}
+      <MaterialCommunityIcons
+        name={"chess-queen"}
+        size={36}
+        color={color}
+        style={{ padding: 8 }}
+      />
       <Text style={styles.clockItemTime}>{`${
         hours !== "00" ? hours + ":" : ""
       }${mins}:${secs}`}</Text>

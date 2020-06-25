@@ -1,90 +1,110 @@
-import React, { useState, useEffect, useRef } from "react";
-import {
-  Text,
-  View,
-  StatusBar,
-  TouchableOpacity,
-  AppState,
-} from "react-native";
+import React, { useState, useEffect } from "react";
+import { Text, View, TouchableOpacity, AsyncStorage } from "react-native";
 import { styles } from "./styles";
+import { LinearGradient } from "expo-linear-gradient";
 
 const formatNumber = (number) => `0${number}`.slice(-2);
+const formatMS = (ms) => `${ms}`.substring(0, 2);
 
 const getRemaining = (time) => {
-  const mins = Math.floor(time / 60);
-  const secs = time - mins * 60;
-  return { mins: formatNumber(mins), secs: formatNumber(secs) };
+  if (!time)
+    return {
+      mins: formatNumber(0),
+      secs: formatNumber(0),
+      ms: formatNumber(0),
+    };
+  const mins = Math.floor(time / 60000);
+  const secs = Math.floor((time - mins * 60000) / 1000);
+  const ms = time - mins * 60000 - secs * 1000;
+  return {
+    mins: formatNumber(mins),
+    secs: formatNumber(secs),
+    ms: formatMS(ms),
+  };
 };
 
 const StopWatch = (props) => {
   const [remainingSecs, setRemainingSecs] = useState(0);
   const [isActive, setIsActive] = useState(false);
-  //const [appState, setAppState] = useState(AppState.currentState);
-  //const [backgroundTime, setBackgroundTime] = useState(0);
-  const { mins, secs } = getRemaining(remainingSecs);
-  const timerRef = useRef();
-  //const backgroundTimerRef = useRef();
+  const [startTime, setStartTime] = useState(null);
+  const [stopTime, setStopTime] = useState(null);
+  const { mins, secs, ms } = getRemaining(remainingSecs);
 
-  // useEffect(() => {
-  //   AppState.addEventListener("change", handleAppStateChange);
-  //   return () => {
-  //     AppState.removeEventListener("change", handleAppStateChange);
-  //   };
-  // }, []);
-
-  // const handleAppStateChange = (nextAppState) => {
-  //   console.log(nextAppState);
-  //   if (nextAppState !== "active") {
-  //     console.log(nextAppState, backgroundTime);
-  //     backgroundTimerRef.current = setInterval(
-  //       () => setBackgroundTime((prev) => prev + 1),
-  //       1000
-  //     );
-  //   } else {
-  //     setRemainingSecs((prev) => prev + backgroundTime);
-  //     setBackgroundTime(0);
-  //     clearInterval(backgroundTimerRef.current);
-  //   }
-  // };
-
-  const toggle = () => {
-    setIsActive(!isActive);
+  const toggle = async () => {
+    if (isActive) {
+      await AsyncStorage.removeItem("Stopwatch:Running");
+    } else {
+      setStartTime(remainingSecs > 0 ? new Date() - remainingSecs : new Date());
+      await AsyncStorage.setItem("Stopwatch:Running", "true");
+    }
+    setIsActive((prev) => !prev);
   };
 
-  const reset = () => {
+  const reset = async () => {
     setRemainingSecs(0);
     setIsActive(false);
+    setStartTime(null);
+    setStopTime(null);
+    await AsyncStorage.removeItem("Stopwatch:Running");
   };
 
   useEffect(() => {
-    //let interval = null;
+    let interval = null;
     if (isActive) {
-      // interval = setInterval(() => {
-      //   setRemainingSecs((remainingSecs) => remainingSecs + 1);
-      // }, 1000);
-      timerRef.current = setInterval(() => {
-        setRemainingSecs((remainingSecs) => remainingSecs + 1);
-      }, 1000);
+      interval = setInterval(() => {
+        setRemainingSecs(new Date() - startTime);
+      }, 10);
     } else if (!isActive && remainingSecs !== 0) {
-      //clearInterval(interval);
-      clearInterval(timerRef.current);
+      clearInterval(interval);
     }
-    return () => clearInterval(timerRef.current);
+    return () => clearInterval(interval);
   }, [isActive, remainingSecs]);
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="light-content" />
-      <Text style={styles.timerText}>{`${mins}:${secs}`}</Text>
-      <TouchableOpacity onPress={toggle} style={styles.button}>
-        <Text style={styles.buttonText}>{isActive ? "Pause" : "Start"}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={reset}
-        style={[styles.button, styles.buttonReset]}
-      >
-        <Text style={[styles.buttonText, styles.buttonTextReset]}>Reset</Text>
-      </TouchableOpacity>
+      <View style={styles.timerContainer}>
+        {mins !== "00" && <Text style={styles.timerText}>{`${mins}`}</Text>}
+        {mins !== "00" && <Text style={styles.timerText}>:</Text>}
+        <Text style={styles.timerText}>{`${secs}`}</Text>
+        <Text style={styles.timerText}>:</Text>
+        <Text style={styles.msText}>{`${ms}`}</Text>
+      </View>
+      <View style={styles.gradient}>
+        <LinearGradient
+          colors={["#FE6B8B", "#FF8E53"]}
+          locations={[0.3, 0.9]}
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            padding: 10,
+          }}
+        >
+          <TouchableOpacity onPress={toggle} style={styles.button2}>
+            <Text style={styles.buttonText}>
+              {isActive ? "Pause" : "Start"}
+            </Text>
+          </TouchableOpacity>
+        </LinearGradient>
+      </View>
+      <View style={styles.gradient}>
+        <LinearGradient
+          colors={["#B9AAFF", "#FE6B8B"]}
+          locations={[0.3, 0.9]}
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            padding: 10,
+          }}
+        >
+          <TouchableOpacity onPress={reset} style={[styles.button2]}>
+            <Text style={[styles.buttonText, styles.buttonTextReset]}>
+              Reset
+            </Text>
+          </TouchableOpacity>
+        </LinearGradient>
+      </View>
     </View>
   );
 };

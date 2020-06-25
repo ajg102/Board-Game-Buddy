@@ -18,27 +18,110 @@ class Die extends Component {
     this.dieType = Types.find((die) => die.type === this.props.type);
   };
 
+  rollAsync = () => {
+    const promise = new Promise((resolve) => {
+      this.setState({ isRolling: true });
+      Animated.sequence([
+        Animated.timing(this.animation, {
+          toValue: 10,
+          duration: 100,
+          useNativeDriver: true,
+        }),
+        Animated.timing(this.animation, {
+          toValue: -10,
+          duration: 75,
+          useNativeDriver: true,
+        }),
+        Animated.timing(this.animation, {
+          toValue: 10,
+          duration: 30,
+          useNativeDriver: true,
+        }),
+        Animated.timing(this.animation, {
+          toValue: -10,
+          duration: 30,
+          useNativeDriver: true,
+        }),
+        Animated.timing(this.animation, {
+          toValue: 10,
+          duration: 30,
+          useNativeDriver: true,
+        }),
+        Animated.timing(this.animation, {
+          toValue: -10,
+          duration: 30,
+          useNativeDriver: true,
+        }),
+        Animated.timing(this.animation, {
+          toValue: 10,
+          duration: 75,
+          useNativeDriver: true,
+        }),
+        Animated.timing(this.animation, {
+          toValue: -10,
+          duration: 125,
+          useNativeDriver: true,
+        }),
+        Animated.timing(this.animation, {
+          toValue: 0,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+      ]).start(() => {
+        const result = Math.ceil(Math.random() * this.dieType.maxValue);
+        this.setState({ value: result, isRolling: false });
+        resolve();
+      });
+    });
+    return promise;
+  };
+
   roll = () => {
     this.setState({ isRolling: true });
     Animated.sequence([
       Animated.timing(this.animation, {
         toValue: 10,
-        duration: 50,
+        duration: 100,
         useNativeDriver: true,
       }),
       Animated.timing(this.animation, {
         toValue: -10,
-        duration: 50,
+        duration: 75,
         useNativeDriver: true,
       }),
       Animated.timing(this.animation, {
         toValue: 10,
-        duration: 50,
+        duration: 30,
+        useNativeDriver: true,
+      }),
+      Animated.timing(this.animation, {
+        toValue: -10,
+        duration: 30,
+        useNativeDriver: true,
+      }),
+      Animated.timing(this.animation, {
+        toValue: 10,
+        duration: 30,
+        useNativeDriver: true,
+      }),
+      Animated.timing(this.animation, {
+        toValue: -10,
+        duration: 30,
+        useNativeDriver: true,
+      }),
+      Animated.timing(this.animation, {
+        toValue: 10,
+        duration: 75,
+        useNativeDriver: true,
+      }),
+      Animated.timing(this.animation, {
+        toValue: -10,
+        duration: 125,
         useNativeDriver: true,
       }),
       Animated.timing(this.animation, {
         toValue: 0,
-        duration: 50,
+        duration: 200,
         useNativeDriver: true,
       }),
     ]).start(() => {
@@ -53,7 +136,9 @@ class Die extends Component {
         style={[
           styles.die,
           this.dieStyles,
-          { transform: [{ translateX: this.animation }] },
+          {
+            transform: [{ translateX: this.animation }],
+          },
         ]}
       >
         {this.state.value && !this.state.isRolling && (
@@ -77,4 +162,5 @@ const Types = [
   { type: "d10", maxValue: 10 },
   { type: "d12", maxValue: 12 },
   { type: "d20", maxValue: 20 },
+  { type: "d100", maxValue: 100 },
 ];

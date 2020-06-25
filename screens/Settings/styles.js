@@ -16,18 +16,21 @@ export const styles = StyleSheet.create({
   divider: {
     height: 0,
     width: "100%",
-    borderWidth: 1,
-    borderColor: "#bbb",
+    borderWidth: 0.25,
+    borderColor: "orange",
   },
   labelStyle: {
     fontSize: 16,
     color: "black",
+    fontFamily: "open-sans",
   },
   header: {
     fontSize: 28,
     fontWeight: "bold",
-    color: "black",
+    color: "white",
+    opacity: 0.87,
     paddingVertical: 16,
     paddingHorizontal: 16,
+    fontFamily: "open-sans-extra-bold",
   },
 });

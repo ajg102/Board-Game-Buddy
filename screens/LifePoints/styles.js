@@ -7,7 +7,7 @@ export const styles = StyleSheet.create({
   },
   scores: {
     width: "100%",
-    height: 125,
+    height: 139,
     alignItems: "center",
     flexDirection: "row",
   },

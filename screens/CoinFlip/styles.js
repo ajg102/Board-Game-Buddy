@@ -9,21 +9,21 @@ export const styles = StyleSheet.create({
   },
   flipFront: {
     margin: 12,
-    backgroundColor: "blue",
+    //backgroundColor: "blue",
     backfaceVisibility: "hidden",
     alignItems: "center",
     justifyContent: "center",
-    borderWidth: 5,
-    borderColor: "#aaa",
+    //borderWidth: 5,
+    //borderColor: "#aaa",
     shadowColor: "black",
     shadowOffset: { width: 3, height: 5 },
     shadowOpacity: 0.8,
     shadowRadius: 3,
-    elevation: 5,
+    //elevation: 5,
   },
   backFlip: {
-    backgroundColor: "red",
-    borderColor: "#eee",
+    //backgroundColor: "red",
+    //borderColor: "#eee",
     position: "absolute",
     top: 0,
   },
@@ -41,21 +41,36 @@ export const styles = StyleSheet.create({
   },
   button: {
     width: "90%",
-    position: "absolute",
-    bottom: 40,
-    backgroundColor: "blue",
-    justifyContent: "center",
-    alignItems: "center",
     height: 56,
     alignSelf: "center",
     borderRadius: 8,
     zIndex: 2000,
+    overflow: "hidden",
+  },
+  buttonBackground: {
+    justifyContent: "center",
+    alignItems: "center",
+    flex: 1,
   },
   buttonText: {
     fontSize: 20,
     fontWeight: "bold",
     color: "white",
     letterSpacing: 1.2,
+    fontFamily: "open-sans-bold",
+  },
+  resultsContainer: {
+    flexDirection: "row",
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "space-evenly",
+    marginVertical: 24,
+  },
+  resultsText: {
+    fontWeight: "bold",
+    fontSize: 26,
+    color: "black",
+    fontFamily: "open-sans-bold",
   },
 });
 
@@ -83,4 +98,11 @@ export const sizeCoins = (num) => {
     width,
     borderRadius,
   };
+};
+
+export const coinFaceSets = {
+  og: {
+    heads: require("../../assets/coin_faces/heads-og.png"),
+    tails: require("../../assets/coin_faces/tails-og.png"),
+  },
 };

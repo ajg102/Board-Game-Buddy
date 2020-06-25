@@ -14,6 +14,7 @@ export const styles = StyleSheet.create({
   timeText: {
     fontSize: 28,
     fontWeight: "bold",
+    fontFamily: "open-sans-bold",
   },
   divider: {
     width: "90%",
@@ -27,7 +28,7 @@ export const styles = StyleSheet.create({
     width: size(50),
     height: size(50),
     borderRadius: size(25),
-    backgroundColor: "blue",
+    backgroundColor: "#FE6B8B",
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
@@ -46,7 +47,7 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-evenly",
     alignItems: "center",
-    borderWidth: 1,
+    //borderWidth: 1,
   },
   footerButton: {
     flex: 1,
@@ -58,5 +59,14 @@ export const styles = StyleSheet.create({
     opacity: 0.87,
     fontSize: 16,
     fontWeight: "bold",
+    fontFamily: "open-sans-bold",
+  },
+  timerCountdownText: {
+    position: "absolute",
+    alignSelf: "center",
+    fontSize: 36,
+    fontWeight: "bold",
+    fontFamily: "open-sans-bold",
+    color: "white",
   },
 });

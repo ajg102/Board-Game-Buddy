@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { View, Text } from "react-native";
+import { View, Text, Alert } from "react-native";
 import Keypad from "../../components/Keypad";
 import ScoreBar from "./ScoreBar";
 import { useDispatch } from "react-redux";
@@ -11,6 +11,12 @@ import * as Haptics from "expo-haptics";
 const LifePoints = (props) => {
   const { navigation } = props;
   const dispatch = useDispatch();
+  const resetHandler = () => {
+    Alert.alert("Reset", "Reset this game?", [
+      { text: "No", style: "cancel" },
+      { text: "Yes", onPress: resetScores },
+    ]);
+  };
   const resetScores = useCallback(() => {
     dispatch({ type: "LIFEPOINTS:RESET" });
   }, []);
@@ -18,11 +24,14 @@ const LifePoints = (props) => {
     navigation.setOptions({
       headerRight: () => (
         <HeaderButtons HeaderButtonComponent={MaterialHeaderButton}>
-          <Item iconName="refresh" onPress={resetScores} title="reset" />
+          <Item iconName="refresh" onPress={resetHandler} title="reset" />
         </HeaderButtons>
       ),
+      // headerBackground: () => (
+      //   <View style={[{ backgroundColor: "black" }, StyleSheet.absoluteFill]} />
+      // ),
     });
-  }, [navigation]);
+  }, [navigation, dispatch]);
   const [score, setScore] = useState("");
   const addDigit = (digit) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -71,6 +80,7 @@ const LifePoints = (props) => {
           backgroundColor={"red"}
           changeScore={adjustScore}
         />
+
         {score !== "" ? (
           <View style={styles.entry}>
             <Text style={{ color: "white", fontSize: 26, fontWeight: "700" }}>

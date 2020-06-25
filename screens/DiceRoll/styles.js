@@ -8,25 +8,48 @@ export const styles = StyleSheet.create({
     borderRadius: size(8),
     margin: 16,
     backgroundColor: "white",
+    elevation: 5,
+    shadowColor: "black",
+    shadowOffset: { width: 2, height: 3 },
+    shadowOpacity: 0.7,
+    shadowRadius: 3,
   },
-  dieFace: { resizeMode: "cover", width: "100%", height: "100%" },
+  dieFace: {
+    resizeMode: "cover",
+    width: "100%",
+    height: "100%",
+  },
+  dieColorOption: {
+    width: 36,
+    height: 36,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: "#eee",
+  },
   container: {
     flex: 1,
     margin: 8,
     alignItems: "center",
   },
-  rollButton: {
-    width: Dimensions.get("screen").width * 0.9,
-    height: size(48),
-    borderRadius: 4,
+  button: {
+    width: "90%",
+    height: 56,
+    alignSelf: "center",
+    borderRadius: 8,
+    zIndex: 2000,
+    overflow: "hidden",
+  },
+  buttonBackground: {
     justifyContent: "center",
     alignItems: "center",
+    flex: 1,
   },
   buttonText: {
     fontSize: 20,
-    color: "white",
-    letterSpacing: 1.5,
     fontWeight: "bold",
+    color: "white",
+    letterSpacing: 1.2,
+    fontFamily: "open-sans-bold",
   },
   resultsContainer: {
     flexDirection: "row",
@@ -39,6 +62,7 @@ export const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 26,
     color: "black",
+    fontFamily: "open-sans-bold",
   },
 });
 

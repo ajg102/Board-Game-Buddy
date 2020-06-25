@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
+  FlatList,
 } from "react-native";
 import { styles } from "./styles";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,6 +21,7 @@ import {
 } from "react-native-paper";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { MaterialHeaderButton } from "../../components/NavHeaderButtons";
+import { LinearGradient } from "expo-linear-gradient";
 
 // turn % 4
 const TURN_RULES_BY_REMAINDER = {
@@ -60,9 +62,12 @@ const SCORE_OPTIONS = [
   -26,
 ];
 
+const VALID_SCORES = [26, -26, 78];
+
 const Hearts = (props) => {
   const { navigation } = props;
   const dispatch = useDispatch();
+  const inputRef = useRef();
   const [addedPlayers, setAddedPlayers] = useState([]);
   const [name, setName] = useState("");
   const [p1TurnScore, setP1TurnScore] = useState(0);
@@ -137,11 +142,12 @@ const Hearts = (props) => {
   };
 
   const addPlayerHandler = () => {
-    if (addedPlayers.length >= 4) return;
+    if (addedPlayers.length >= 4 || name.trim().length === 0) return;
     const data = [...addedPlayers];
     data.push({ name: name });
     setAddedPlayers(data);
     setName("");
+    inputRef.current.focus();
   };
 
   const removePlayerHandler = (index) => {
@@ -201,6 +207,12 @@ const Hearts = (props) => {
   };
 
   const addScoreHandler = () => {
+    const sumOfScores = p1TurnScore + p2TurnScore + p3TurnScore + p4TurnScore;
+    if (!VALID_SCORES.includes(sumOfScores)) {
+      return alert(
+        `You entered a score of ${sumOfScores} which is not a normal hearts score.`
+      );
+    }
     const update = {
       p1: p1TurnScore,
       p2: p2TurnScore,
@@ -215,6 +227,48 @@ const Hearts = (props) => {
     setP4TurnScore(0);
   };
 
+  const _renderHistoryItem = ({ item }) => (
+    <View style={styles.scoreHistoryItem}>
+      <View style={styles.gameSectionCell}>
+        <Text style={styles.gameSectionHeaderSubTitle}>{item.p1}</Text>
+      </View>
+      <View style={styles.gameSectionCell}>
+        <Text style={styles.gameSectionHeaderSubTitle}>{item.p2}</Text>
+      </View>
+      <View style={styles.gameSectionCell}>
+        <Text style={styles.gameSectionHeaderSubTitle}>{item.p3}</Text>
+      </View>
+      <View style={styles.gameSectionCell}>
+        <Text style={styles.gameSectionHeaderSubTitle}>{item.p4}</Text>
+      </View>
+    </View>
+  );
+
+  const _renderEmptyScores = () => (
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <Text
+        style={{
+          fontSize: 36,
+          fontWeight: "bold",
+          margin: 16,
+          fontFamily: "open-sans-extra-bold",
+        }}
+      >
+        Good Luck!
+      </Text>
+      <Text
+        style={{
+          fontSize: 36,
+          fontWeight: "bold",
+          margin: 16,
+          fontFamily: "open-sans-extra-bold",
+        }}
+      >
+        Have Fun!
+      </Text>
+    </View>
+  );
+
   return (
     <View style={styles.container}>
       {turnNumber === 0 && (
@@ -222,6 +276,7 @@ const Hearts = (props) => {
           <View style={styles.inputContainer}>
             {addedPlayers.length < 4 && (
               <TextInput
+                ref={inputRef}
                 style={styles.input}
                 value={name}
                 placeholder={`Player ${addedPlayers.length + 1} name`}
@@ -230,21 +285,21 @@ const Hearts = (props) => {
               />
             )}
           </View>
-          {addedPlayers.length < 4 ? (
-            <TouchableOpacity
+          <TouchableOpacity
+            onPress={
+              addedPlayers.length < 4 ? addPlayerHandler : startGameHandler
+            }
+          >
+            <LinearGradient
+              colors={["#FE6B8B", "#FF8E53"]}
+              locations={[0.3, 0.9]}
               style={styles.addPlayerButton}
-              onPress={addPlayerHandler}
             >
-              <Text style={styles.addPlayerButtonText}>Add Player</Text>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity
-              style={styles.addPlayerButton}
-              onPress={startGameHandler}
-            >
-              <Text style={styles.addPlayerButtonText}>Start Game!</Text>
-            </TouchableOpacity>
-          )}
+              <Text style={styles.addPlayerButtonText}>
+                {addedPlayers.length < 4 ? "Add Player" : "Start Game!"}
+              </Text>
+            </LinearGradient>
+          </TouchableOpacity>
           {addedPlayers.map((player, index) => (
             <View style={styles.playerCard} key={`${index}`}>
               <Text style={styles.playerNameLabel}>{player.name}</Text>
@@ -264,13 +319,12 @@ const Hearts = (props) => {
       )}
       {turnNumber > 0 && (
         <View style={styles.container}>
-          <View style={styles.gameTurnHeader}>
+          <View style={[styles.gameTurnHeader, { backgroundColor: "#FF8E53" }]}>
             <Text style={styles.gameTurnHeaderText}>
               {TURN_RULES_BY_REMAINDER[(turnNumber % 4).toString()]}
             </Text>
             <Text style={styles.gameTurnHeaderText}>Turn: {turnNumber}</Text>
           </View>
-          {/* <Text onPress={() => dispatch({ type: "HEARTS:RESET" })}>RESET</Text> */}
           <View style={styles.gameSectionHeader}>
             <View style={styles.gameSectionCell}>
               <Text style={styles.gameSectionHeaderSubTitle}>
@@ -305,18 +359,22 @@ const Hearts = (props) => {
               </Text>
             </View>
           </View>
-          <View style={styles.gameSectionHeader}>
+          <View style={[styles.gameSectionHeader, { borderTopWidth: 0 }]}>
             <View style={styles.gameSectionCell}>
               <Menu
                 visible={p1Open}
+                contentStyle={{ paddingVertical: 32 }}
                 onDismiss={() => setP1Open(false)}
                 anchor={
-                  <TouchableOpacity
-                    style={styles.scorePickerButton}
-                    onPress={() => setP1Open(true)}
-                  >
-                    <Text style={styles.scorePickerText}>{p1TurnScore}</Text>
-                    <View style={styles.scorePickerTextUnderline} />
+                  <TouchableOpacity onPress={() => setP1Open(true)}>
+                    <LinearGradient
+                      colors={["#FE6B8B", "#FF8E53"]}
+                      locations={[0.3, 0.9]}
+                      style={styles.scorePickerButton}
+                    >
+                      <Text style={styles.scorePickerText}>{p1TurnScore}</Text>
+                      <View style={styles.scorePickerTextUnderline} />
+                    </LinearGradient>
                   </TouchableOpacity>
                 }
               >
@@ -324,6 +382,10 @@ const Hearts = (props) => {
                   <Menu.Item
                     key={`${item}`}
                     title={item}
+                    titleStyle={{
+                      textAlign: "center",
+                      fontFamily: "open-sans",
+                    }}
                     onPress={() => changeP1ScoreHandler(item)}
                   />
                 ))}
@@ -332,14 +394,18 @@ const Hearts = (props) => {
             <View style={styles.gameSectionCell}>
               <Menu
                 visible={p2Open}
+                contentStyle={{ paddingVertical: 32 }}
                 onDismiss={() => setP2Open(false)}
                 anchor={
-                  <TouchableOpacity
-                    style={styles.scorePickerButton}
-                    onPress={() => setP2Open(true)}
-                  >
-                    <Text style={styles.scorePickerText}>{p2TurnScore}</Text>
-                    <View style={styles.scorePickerTextUnderline} />
+                  <TouchableOpacity onPress={() => setP2Open(true)}>
+                    <LinearGradient
+                      colors={["#FE6B8B", "#FF8E53"]}
+                      locations={[0.3, 0.9]}
+                      style={styles.scorePickerButton}
+                    >
+                      <Text style={styles.scorePickerText}>{p2TurnScore}</Text>
+                      <View style={styles.scorePickerTextUnderline} />
+                    </LinearGradient>
                   </TouchableOpacity>
                 }
               >
@@ -347,6 +413,10 @@ const Hearts = (props) => {
                   <Menu.Item
                     key={`${item}`}
                     title={item}
+                    titleStyle={{
+                      textAlign: "center",
+                      fontFamily: "open-sans",
+                    }}
                     onPress={() => changeP2ScoreHandler(item)}
                   />
                 ))}
@@ -355,14 +425,18 @@ const Hearts = (props) => {
             <View style={styles.gameSectionCell}>
               <Menu
                 visible={p3Open}
+                contentStyle={{ paddingVertical: 32 }}
                 onDismiss={() => setP3Open(false)}
                 anchor={
-                  <TouchableOpacity
-                    style={styles.scorePickerButton}
-                    onPress={() => setP3Open(true)}
-                  >
-                    <Text style={styles.scorePickerText}>{p3TurnScore}</Text>
-                    <View style={styles.scorePickerTextUnderline} />
+                  <TouchableOpacity onPress={() => setP3Open(true)}>
+                    <LinearGradient
+                      colors={["#FE6B8B", "#FF8E53"]}
+                      locations={[0.3, 0.9]}
+                      style={styles.scorePickerButton}
+                    >
+                      <Text style={styles.scorePickerText}>{p3TurnScore}</Text>
+                      <View style={styles.scorePickerTextUnderline} />
+                    </LinearGradient>
                   </TouchableOpacity>
                 }
               >
@@ -370,6 +444,10 @@ const Hearts = (props) => {
                   <Menu.Item
                     key={`${item}`}
                     title={item}
+                    titleStyle={{
+                      textAlign: "center",
+                      fontFamily: "open-sans",
+                    }}
                     onPress={() => changeP3ScoreHandler(item)}
                   />
                 ))}
@@ -378,68 +456,59 @@ const Hearts = (props) => {
             <View style={styles.gameSectionCell}>
               <Menu
                 visible={p4Open}
+                contentStyle={{ paddingVertical: 32 }}
                 onDismiss={() => setP4Open(false)}
                 anchor={
-                  <TouchableOpacity
-                    style={styles.scorePickerButton}
-                    onPress={() => setP4Open(true)}
-                  >
-                    <Text style={styles.scorePickerText}>{p4TurnScore}</Text>
-                    <View style={styles.scorePickerTextUnderline} />
+                  <TouchableOpacity onPress={() => setP4Open(true)}>
+                    <LinearGradient
+                      colors={["#FE6B8B", "#FF8E53"]}
+                      locations={[0.3, 0.9]}
+                      style={styles.scorePickerButton}
+                    >
+                      <Text style={styles.scorePickerText}>{p4TurnScore}</Text>
+                      <View style={styles.scorePickerTextUnderline} />
+                    </LinearGradient>
                   </TouchableOpacity>
                 }
               >
                 {SCORE_OPTIONS.map((item) => (
                   <Menu.Item
+                    key={`${item}`}
                     title={item}
+                    titleStyle={{
+                      textAlign: "center",
+                      fontFamily: "open-sans",
+                    }}
                     onPress={() => changeP4ScoreHandler(item)}
                   />
                 ))}
               </Menu>
             </View>
           </View>
-          <ScrollView>
-            {score_history.map((item, index) => (
-              <View
-                key={`${index}`}
-                style={{
-                  width: "100%",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  height: 50,
-                }}
+          <FlatList
+            data={score_history}
+            keyExtractor={(item, index) => "key" + index}
+            renderItem={_renderHistoryItem}
+            style={{ flex: 1 }}
+            ItemSeparatorComponent={() => <Divider />}
+            ListEmptyComponent={_renderEmptyScores}
+          />
+          <View style={{ height: 96, width: "100%" }}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={gameOver ? resetGame : addScoreHandler}
+            >
+              <LinearGradient
+                colors={["#FE6B8B", "#FF8E53"]}
+                locations={[0.3, 0.9]}
+                style={styles.buttonBackground}
               >
-                <View style={styles.gameSectionCell}>
-                  <Text style={styles.gameSectionHeaderSubTitle}>
-                    {item.p1}
-                  </Text>
-                </View>
-                <View style={styles.gameSectionCell}>
-                  <Text style={styles.gameSectionHeaderSubTitle}>
-                    {item.p2}
-                  </Text>
-                </View>
-                <View style={styles.gameSectionCell}>
-                  <Text style={styles.gameSectionHeaderSubTitle}>
-                    {item.p3}
-                  </Text>
-                </View>
-                <View style={styles.gameSectionCell}>
-                  <Text style={styles.gameSectionHeaderSubTitle}>
-                    {item.p4}
-                  </Text>
-                </View>
-              </View>
-            ))}
-          </ScrollView>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={gameOver ? resetGame : addScoreHandler}
-          >
-            <Text style={styles.buttonText}>
-              {gameOver ? "Finish" : "Add Score"}
-            </Text>
-          </TouchableOpacity>
+                <Text style={styles.buttonText}>
+                  {gameOver ? "Finish" : "Add Score"}
+                </Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          </View>
         </View>
       )}
       <WinnerDialog

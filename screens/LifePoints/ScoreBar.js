@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+//import AnimateNumber from "@bankify/react-native-animate-number";
 
 const ScoreBar = ({ player, backgroundColor, changeScore }) => {
   const score = useSelector((state) => state.lifepoints.scores[player]);
@@ -13,6 +14,7 @@ const ScoreBar = ({ player, backgroundColor, changeScore }) => {
       </View>
       <View style={styles.iconContainer}>
         <TouchableOpacity
+          hitSlop={{ top: 16, left: 16, right: 16, bottom: 16 }}
           onPress={() =>
             changeScore({ player: player, type: "dmg", currScore: score })
           }
@@ -20,10 +22,11 @@ const ScoreBar = ({ player, backgroundColor, changeScore }) => {
           <MaterialCommunityIcons
             name="sword"
             color={backgroundColor}
-            size={30}
+            size={40}
           />
         </TouchableOpacity>
         <TouchableOpacity
+          hitSlop={{ top: 16, left: 16, right: 16, bottom: 16 }}
           onPress={() =>
             changeScore({ player: player, type: "heal", currScore: score })
           }
@@ -31,7 +34,7 @@ const ScoreBar = ({ player, backgroundColor, changeScore }) => {
           <MaterialCommunityIcons
             name="heart"
             color={backgroundColor}
-            size={30}
+            size={40}
           />
         </TouchableOpacity>
       </View>
@@ -41,7 +44,7 @@ const ScoreBar = ({ player, backgroundColor, changeScore }) => {
 
 const styles = StyleSheet.create({
   container: {
-    height: 125,
+    height: 139,
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
@@ -56,10 +59,11 @@ const styles = StyleSheet.create({
     fontSize: 26,
     color: "white",
     fontWeight: "600",
+    //fontFamily: "open-sans-bold",
   },
   iconContainer: {
     width: "100%",
-    height: 50,
+    height: 64,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-evenly",

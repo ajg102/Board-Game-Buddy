@@ -34,7 +34,7 @@ const TimePicker = ({
   return (
     <Portal>
       <Dialog visible={visible} onDismiss={onCancel}>
-        <Dialog.Title>{title}</Dialog.Title>
+        <Dialog.Title style={{ color: "#FF8E53" }}>{title}</Dialog.Title>
         <Divider />
         <Dialog.Content>
           <Dropdown
@@ -76,8 +76,12 @@ const TimePicker = ({
         </Dialog.Content>
         <Divider />
         <Dialog.Actions>
-          <Button onPress={onCancel}>Cancel</Button>
-          <Button onPress={() => onDone(hrs, mins, secs)}>Done</Button>
+          <Button color="#FF8E53" onPress={onCancel}>
+            Cancel
+          </Button>
+          <Button color="#FF8E53" onPress={() => onDone(hrs, mins, secs)}>
+            Done
+          </Button>
         </Dialog.Actions>
       </Dialog>
     </Portal>

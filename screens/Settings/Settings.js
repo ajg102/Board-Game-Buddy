@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { styles } from "./styles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import NativeTouchable from "../../components/NativeTouchable";
+import { LinearGradient } from "expo-linear-gradient";
 
 const Settings = (props) => {
   const dispatch = useDispatch();
@@ -24,10 +25,20 @@ const Settings = (props) => {
       onPress={() => onItemSelected(item)}
       style={styles.rowItem}
     >
-      <Text style={styles.labelStyle}>{item.label}</Text>
+      <Text
+        style={[
+          styles.labelStyle,
+          {
+            fontWeight: item.fav ? "bold" : "normal",
+            fontFamily: item.fav ? "open-sans-bold" : "open-sans",
+          },
+        ]}
+      >
+        {item.label}
+      </Text>
       <MaterialCommunityIcons
         name={item.fav ? "star" : "star-outline"}
-        color={item.fav ? "yellow" : "black"}
+        color={item.fav ? "#FE6B8B" : "black"}
         size={item.fav ? 32 : 28}
       />
     </NativeTouchable>
@@ -35,9 +46,15 @@ const Settings = (props) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header} onPress={() => dispatch({ type: "RESET" })}>
-        My Favorites
-      </Text>
+      {/* <LinearGradient colors={["#FE6B8B", "#FF8E53"]} locations={[0.3, 0.9]}> */}
+      <View style={{ backgroundColor: "#FF8E53", width: "100%" }}>
+        <Text style={styles.header} onPress={() => dispatch({ type: "RESET" })}>
+          My Favorites
+        </Text>
+      </View>
+
+      {/* </LinearGradient> */}
+
       <View style={styles.divider} />
       <FlatList
         data={screens}

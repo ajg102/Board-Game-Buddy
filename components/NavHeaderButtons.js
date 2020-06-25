@@ -8,6 +8,6 @@ export const MaterialHeaderButton = (props) => (
     {...props}
     IconComponent={MaterialCommunityIcons}
     iconSize={28}
-    color={Platform.OS === "ios" ? "black" : "white"}
+    color={Platform.OS === "ios" ? "white" : "white"}
   />
 );
