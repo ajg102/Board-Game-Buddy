@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { Portal, Dialog, Button, Divider } from "react-native-paper";
-import { Dropdown } from "react-native-material-dropdown";
+import React, { useEffect, useState } from "react";
+// import { Dropdown } from "react-native-material-dropdown-v2";
+import { Button, Dialog, Divider, Portal } from "react-native-paper";
 
 const formatNumber = (number) => `0${number}`.slice(-2);
 
@@ -37,7 +37,7 @@ const TimePicker = ({
         <Dialog.Title style={{ color: "#FF8E53" }}>{title}</Dialog.Title>
         <Divider />
         <Dialog.Content>
-          <Dropdown
+          {/* <Dropdown
             value={hrs}
             itemCount={9}
             pickerStyle={{
@@ -72,7 +72,7 @@ const TimePicker = ({
             label="Seconds"
             data={data.seconds}
             onChangeText={(val) => setSecs(val)}
-          />
+          /> */}
         </Dialog.Content>
         <Divider />
         <Dialog.Actions>

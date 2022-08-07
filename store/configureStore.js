@@ -1,21 +1,18 @@
-import { combineReducers, createStore, applyMiddleware } from "redux";
-import thunk from "redux-thunk";
-import { persistReducer, persistStore, createMigrate } from "redux-persist";
-import { AsyncStorage } from "react-native";
-import { migrations } from "./migrations";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { configureStore } from "@reduxjs/toolkit";
+import { combineReducers } from "redux";
+import { persistReducer, persistStore } from "redux-persist";
+import chessTimerReducer from "./reducers/chessTimer";
+import dartsReducer from "./reducers/darts";
+import heartsReducer from "./reducers/hearts";
 import lifepointsReducer from "./reducers/lifepoints";
 import screensReducer from "./reducers/screens";
-import chessTimerReducer from "./reducers/chessTimer";
-import heartsReducer from "./reducers/hearts";
-import dartsReducer from "./reducers/darts";
-import bracketsReducer from "./reducers/brackets";
 
 const persistConfig = {
   key: "root",
   storage: AsyncStorage,
   blacklist: ["darts"],
-  version: 0, //must specify version to migrate to
-  migrate: createMigrate(migrations, { debug: true }),
+  version: -1, //must specify version to migrate to
 };
 
 const rootReducer = combineReducers({
@@ -24,12 +21,14 @@ const rootReducer = combineReducers({
   chessTimer: chessTimerReducer,
   hearts: heartsReducer,
   darts: dartsReducer,
-  brackets: bracketsReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-const store = createStore(persistedReducer, applyMiddleware(thunk));
+const store = configureStore({
+  reducer: persistedReducer,
+  middleware: (getDefault) => getDefault({ serializableCheck: false }),
+});
 const persistedStore = persistStore(store);
 
 export { store, persistedStore };

@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { Text, View, TouchableOpacity, AsyncStorage } from "react-native";
-import { styles } from "./styles";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LinearGradient } from "expo-linear-gradient";
+import React, { useEffect, useState } from "react";
+import { Text, TouchableOpacity, View } from "react-native";
+import { styles } from "./styles";
 
 const formatNumber = (number) => `0${number}`.slice(-2);
 const formatMS = (ms) => `${ms}`.substring(0, 2);

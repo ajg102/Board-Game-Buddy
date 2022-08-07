@@ -1,23 +1,20 @@
-import React from "react";
-import { View, Text, FlatList } from "react-native";
-import { useSelector, useDispatch } from "react-redux";
-import { styles } from "./styles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import React from "react";
+import { FlatList, Text, View } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
 import NativeTouchable from "../../components/NativeTouchable";
-import { LinearGradient } from "expo-linear-gradient";
+import { add, remove, reset } from "../../store/reducers/screens";
+import { styles } from "./styles";
 
 const Settings = (props) => {
   const dispatch = useDispatch();
-  const screens = useSelector((state) => state.screens.screens).sort((a, b) => {
-    if (a.label > b.label) return 1;
-    else if (a.label < b.label) return -1;
-    else return 0;
-  });
+  const screens = useSelector((state) => state.screens.screens);
+
   const onItemSelected = (item) => {
     if (item.fav) {
-      dispatch({ type: "FAVORITES:REMOVE", key: item.nav });
+      dispatch(remove(item.nav));
     } else {
-      dispatch({ type: "FAVORITES:ADD", key: item.nav });
+      dispatch(add(item.nav));
     }
   };
   const _renderItem = ({ item }) => (
@@ -46,18 +43,19 @@ const Settings = (props) => {
 
   return (
     <View style={styles.container}>
-      {/* <LinearGradient colors={["#FE6B8B", "#FF8E53"]} locations={[0.3, 0.9]}> */}
       <View style={{ backgroundColor: "#FF8E53", width: "100%" }}>
-        <Text style={styles.header} onPress={() => dispatch({ type: "RESET" })}>
+        <Text style={styles.header} onPress={() => dispatch(reset())}>
           My Favorites
         </Text>
       </View>
 
-      {/* </LinearGradient> */}
-
       <View style={styles.divider} />
       <FlatList
-        data={screens}
+        data={[...screens].sort((a, b) => {
+          if (a.label > b.label) return 1;
+          else if (a.label < b.label) return -1;
+          else return 0;
+        })}
         keyExtractor={(item, index) => item.nav}
         renderItem={_renderItem}
       />

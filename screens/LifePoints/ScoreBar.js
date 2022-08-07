@@ -1,9 +1,8 @@
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { useSelector } from "react-redux";
-import PropTypes from "prop-types";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-//import AnimateNumber from "@bankify/react-native-animate-number";
+import PropTypes from "prop-types";
+import React from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useSelector } from "react-redux";
 
 const ScoreBar = ({ player, backgroundColor, changeScore }) => {
   const score = useSelector((state) => state.lifepoints.scores[player]);

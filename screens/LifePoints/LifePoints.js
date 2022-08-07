@@ -1,12 +1,13 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { View, Text, Alert } from "react-native";
-import Keypad from "../../components/Keypad";
-import ScoreBar from "./ScoreBar";
-import { useDispatch } from "react-redux";
-import { HeaderButtons, Item } from "react-navigation-header-buttons";
-import { MaterialHeaderButton } from "../../components/NavHeaderButtons";
-import { styles } from "./styles";
 import * as Haptics from "expo-haptics";
+import React, { useCallback, useEffect, useState } from "react";
+import { Alert, Text, View } from "react-native";
+import { HeaderButtons, Item } from "react-navigation-header-buttons";
+import { useDispatch } from "react-redux";
+import Keypad from "../../components/Keypad";
+import { MaterialHeaderButton } from "../../components/NavHeaderButtons";
+import { reset, update } from "../../store/reducers/lifepoints";
+import ScoreBar from "./ScoreBar";
+import { styles } from "./styles";
 
 const LifePoints = (props) => {
   const { navigation } = props;
@@ -18,7 +19,7 @@ const LifePoints = (props) => {
     ]);
   };
   const resetScores = useCallback(() => {
-    dispatch({ type: "LIFEPOINTS:RESET" });
+    dispatch(reset());
   }, []);
   useEffect(() => {
     navigation.setOptions({
@@ -27,9 +28,6 @@ const LifePoints = (props) => {
           <Item iconName="refresh" onPress={resetHandler} title="reset" />
         </HeaderButtons>
       ),
-      // headerBackground: () => (
-      //   <View style={[{ backgroundColor: "black" }, StyleSheet.absoluteFill]} />
-      // ),
     });
   }, [navigation, dispatch]);
   const [score, setScore] = useState("");
@@ -61,10 +59,7 @@ const LifePoints = (props) => {
     if (newScore < 0) {
       newScore = 0;
     }
-    dispatch({
-      type: "LIFEPOINTS:UPDATE",
-      update: { [dmgObj.player]: newScore },
-    });
+    dispatch(update({ update: { [dmgObj.player]: newScore } }));
     clearScore();
   };
   return (
@@ -81,13 +76,13 @@ const LifePoints = (props) => {
           changeScore={adjustScore}
         />
 
-        {score !== "" ? (
+        {score !== "" && (
           <View style={styles.entry}>
             <Text style={{ color: "white", fontSize: 26, fontWeight: "700" }}>
               {score}
             </Text>
           </View>
-        ) : null}
+        )}
       </View>
       <Keypad add={addDigit} backspace={backspace} clear={clearScore} />
     </View>

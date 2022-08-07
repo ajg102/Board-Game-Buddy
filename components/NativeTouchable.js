@@ -1,12 +1,12 @@
 import React from "react";
 import {
-  View,
-  TouchableOpacity,
-  TouchableNativeFeedback,
   Platform,
+  TouchableNativeFeedback,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
-export default NativeTouchable = (props) => {
+const NativeTouchable = (props) => {
   return Platform.OS === "android" ? (
     <TouchableNativeFeedback
       onPress={props.onPress}
@@ -23,3 +23,5 @@ export default NativeTouchable = (props) => {
     </TouchableOpacity>
   );
 };
+
+export default NativeTouchable;

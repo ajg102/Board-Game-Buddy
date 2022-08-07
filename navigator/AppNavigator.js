@@ -1,31 +1,26 @@
-import React from "react";
+import { createDrawerNavigator } from "@react-navigation/drawer";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { createDrawerNavigator } from "@react-navigation/drawer";
-import {
-  LifePoints,
-  Timer,
-  CoinFlip,
-  DiceRoll,
-  RNG,
-  StopWatch,
-  ChessTimer,
-  ChessClock,
-  DnD,
-  Settings,
-  Sketch,
-  Hearts,
-  Darts,
-  //Bracket,
-  //BracketList,
-  //CreateBracket,
-  Spades,
-} from "../screens/index";
-import { HeaderButtons, Item } from "react-navigation-header-buttons";
-import { MaterialHeaderButton } from "../components/NavHeaderButtons";
-import CustomDrawer from "../components/Drawer/Drawer";
-import { Platform, StyleSheet } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import React from "react";
+import { StyleSheet } from "react-native";
+import { HeaderButtons, Item } from "react-navigation-header-buttons";
+import CustomDrawer from "../components/Drawer/Drawer";
+import { MaterialHeaderButton } from "../components/NavHeaderButtons";
+import {
+  ChessClock,
+  ChessTimer,
+  CoinFlip,
+  Darts,
+  DiceRoll,
+  DnD,
+  Hearts,
+  LifePoints,
+  RNG,
+  Settings,
+  StopWatch,
+  Timer,
+} from "../screens";
 
 const SettingsNav = createStackNavigator();
 const LifePointsNav = createStackNavigator();
@@ -39,22 +34,16 @@ const DnDNav = createStackNavigator();
 const SketchNav = createStackNavigator();
 const HeartsNav = createStackNavigator();
 const DartsNav = createStackNavigator();
-//const BracketNav = createStackNavigator();
-const SpadesNav = createStackNavigator();
 const DrawerNav = createDrawerNavigator();
 
-const getDefaultScreenOptions = () => {
-  return {
-    gesturesEnabled: false,
-    headerTintColor: Platform.OS === "ios" ? "white" : "white",
-    headerStyle: {
-      backgroundColor: Platform.OS === "ios" ? "white" : "black",
-    },
-  };
+const defaultScreenOptions = {
+  gesturesEnabled: false,
+  headerShown: true,
+  headerTintColor: "white",
 };
 
 const SettingsStack = () => (
-  <SettingsNav.Navigator screenOptions={getDefaultScreenOptions()}>
+  <SettingsNav.Navigator screenOptions={defaultScreenOptions}>
     <SettingsNav.Screen
       name="stack_0"
       component={Settings}
@@ -64,7 +53,7 @@ const SettingsStack = () => (
 );
 
 const LifePointsStack = () => (
-  <LifePointsNav.Navigator screenOptions={getDefaultScreenOptions()}>
+  <LifePointsNav.Navigator screenOptions={defaultScreenOptions}>
     <LifePointsNav.Screen
       name="stack_1"
       component={LifePoints}
@@ -72,13 +61,14 @@ const LifePointsStack = () => (
     />
   </LifePointsNav.Navigator>
 );
+
 const TimerStack = () => (
-  <TimerNav.Navigator screenOptions={getDefaultScreenOptions()}>
+  <TimerNav.Navigator screenOptions={defaultScreenOptions}>
     <TimerNav.Screen name="stack_2" component={Timer} options={screenOptions} />
   </TimerNav.Navigator>
 );
 const CoinFlipStack = () => (
-  <CoinFlipNav.Navigator screenOptions={getDefaultScreenOptions()}>
+  <CoinFlipNav.Navigator screenOptions={defaultScreenOptions}>
     <CoinFlipNav.Screen
       name="stack_3"
       component={CoinFlip}
@@ -87,7 +77,7 @@ const CoinFlipStack = () => (
   </CoinFlipNav.Navigator>
 );
 const DiceRollStack = () => (
-  <DiceRollNav.Navigator screenOptions={getDefaultScreenOptions()}>
+  <DiceRollNav.Navigator screenOptions={defaultScreenOptions}>
     <DiceRollNav.Screen
       name="stack_4"
       component={DiceRoll}
@@ -96,13 +86,13 @@ const DiceRollStack = () => (
   </DiceRollNav.Navigator>
 );
 const RNGStack = () => (
-  <RNGNav.Navigator screenOptions={getDefaultScreenOptions()}>
+  <RNGNav.Navigator screenOptions={defaultScreenOptions}>
     <RNGNav.Screen name="stack_5" component={RNG} options={screenOptions} />
   </RNGNav.Navigator>
 );
 
 const StopWatchStack = () => (
-  <StopWatchNav.Navigator screenOptions={getDefaultScreenOptions()}>
+  <StopWatchNav.Navigator screenOptions={defaultScreenOptions}>
     <StopWatchNav.Screen
       name="stack_6"
       component={StopWatch}
@@ -112,7 +102,7 @@ const StopWatchStack = () => (
 );
 
 const ChessTimerStack = () => (
-  <ChessTimerNav.Navigator screenOptions={getDefaultScreenOptions()}>
+  <ChessTimerNav.Navigator screenOptions={defaultScreenOptions}>
     <ChessTimerNav.Screen
       name="stack_7"
       component={ChessTimer}
@@ -127,23 +117,23 @@ const ChessTimerStack = () => (
 );
 
 const DnDStack = () => (
-  <DnDNav.Navigator screenOptions={getDefaultScreenOptions()}>
+  <DnDNav.Navigator screenOptions={defaultScreenOptions}>
     <DnDNav.Screen name="stack_8" component={DnD} options={screenOptions} />
   </DnDNav.Navigator>
 );
 
-const SketchStack = () => (
-  <SketchNav.Navigator screenOptions={getDefaultScreenOptions()}>
-    <SketchNav.Screen
-      name="stack_9"
-      component={Sketch}
-      options={screenOptions}
-    />
-  </SketchNav.Navigator>
-);
+// const SketchStack = () => (
+//   <SketchNav.Navigator screenOptions={defaultScreenOptions}>
+//     <SketchNav.Screen
+//       name="stack_9"
+//       component={Sketch}
+//       options={screenOptions}
+//     />
+//   </SketchNav.Navigator>
+// );
 
 const HeartsStack = () => (
-  <HeartsNav.Navigator screenOptions={getDefaultScreenOptions()}>
+  <HeartsNav.Navigator screenOptions={defaultScreenOptions}>
     <HeartsNav.Screen
       name="stack_10"
       component={Hearts}
@@ -153,64 +143,13 @@ const HeartsStack = () => (
 );
 
 const DartsStack = () => (
-  <DartsNav.Navigator screenOptions={getDefaultScreenOptions()}>
+  <DartsNav.Navigator screenOptions={defaultScreenOptions}>
     <DartsNav.Screen
       name="stack_11"
       component={Darts}
       options={screenOptions}
     />
   </DartsNav.Navigator>
-);
-
-// const BracketStack = () => (
-//   <BracketNav.Navigator screenOptions={getDefaultScreenOptions()}>
-//     <BracketNav.Screen
-//       name="stack_12"
-//       component={BracketList}
-//       options={screenOptions}
-//     />
-//     <BracketNav.Screen
-//       name="bracket_view"
-//       component={Bracket}
-//       options={({ navigation, route }) => {
-//         return {
-//           headerBackground: () => (
-//             <LinearGradient
-//               colors={["#FE6B8B", "#FF8E53"]}
-//               locations={[0.3, 0.9]}
-//               style={StyleSheet.absoluteFill}
-//             />
-//           ),
-//         };
-//       }}
-//     />
-//     <BracketNav.Screen
-//       name="bracket_add"
-//       component={CreateBracket}
-//       options={({ navigation, route }) => {
-//         return {
-//           headerTitle: "New Bracket",
-//           headerBackground: () => (
-//             <LinearGradient
-//               colors={["#FE6B8B", "#FF8E53"]}
-//               locations={[0.3, 0.9]}
-//               style={StyleSheet.absoluteFill}
-//             />
-//           ),
-//         };
-//       }}
-//     />
-//   </BracketNav.Navigator>
-// );
-
-const SpadesStack = () => (
-  <SpadesNav.Navigator screenOptions={getDefaultScreenOptions()}>
-    <SpadesNav.Screen
-      name="stack_13"
-      component={Spades}
-      options={screenOptions}
-    />
-  </SpadesNav.Navigator>
 );
 
 const screenOptions = ({ navigation, route }) => {
@@ -233,7 +172,7 @@ const screenOptions = ({ navigation, route }) => {
       headerTitle = "Dice Roll";
       break;
     case "stack_5":
-      headerTitle = "R.N.G.";
+      headerTitle = "Random Numbers";
       break;
     case "stack_6":
       headerTitle = "Stop Watch";
@@ -252,12 +191,6 @@ const screenOptions = ({ navigation, route }) => {
       break;
     case "stack_11":
       headerTitle = "Darts";
-      break;
-    // case "stack_12":
-    //   headerTitle = "Brackets";
-    //   break;
-    case "stack_13":
-      headerTitle = "Spades";
       break;
     default:
       headerTitle = "";
@@ -287,7 +220,10 @@ const screenOptions = ({ navigation, route }) => {
 };
 
 const Drawer = () => (
-  <DrawerNav.Navigator drawerContent={(props) => <CustomDrawer {...props} />}>
+  <DrawerNav.Navigator
+    screenOptions={{ headerShown: false }}
+    drawerContent={(props) => <CustomDrawer {...props} />}
+  >
     <DrawerNav.Screen name="CoinFlip" component={CoinFlipStack} />
     <DrawerNav.Screen name="Settings" component={SettingsStack} />
     <DrawerNav.Screen name="LifePoints" component={LifePointsStack} />
@@ -297,11 +233,9 @@ const Drawer = () => (
     <DrawerNav.Screen name="StopWatch" component={StopWatchStack} />
     <DrawerNav.Screen name="ChessTimer" component={ChessTimerStack} />
     <DrawerNav.Screen name="DnD" component={DnDStack} />
-    <DrawerNav.Screen name="Sketch" component={SketchStack} />
+    {/* <DrawerNav.Screen name="Sketch" component={SketchStack} /> */}
     <DrawerNav.Screen name="Hearts" component={HeartsStack} />
     <DrawerNav.Screen name="Darts" component={DartsStack} />
-    {/* <DrawerNav.Screen name="Bracket" component={BracketStack} /> */}
-    <DrawerNav.Screen name="Spades" component={SpadesStack} />
   </DrawerNav.Navigator>
 );
 

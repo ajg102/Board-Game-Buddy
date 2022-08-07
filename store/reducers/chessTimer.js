@@ -1,3 +1,5 @@
+import { createSlice } from "@reduxjs/toolkit";
+
 const initialState = {
   initialTime: 300,
   whiteInitialTime: 300,
@@ -5,33 +7,36 @@ const initialState = {
   modifier: 0,
 };
 
-const reducer = (state = initialState, action) => {
-  switch (action.type) {
-    case "SET_INITIAL_TIME":
-      return {
-        ...state,
-        initialTime: action.time,
-      };
-    case "SET_WHITE_TIME":
-      return {
-        ...state,
-        whiteInitialTime: action.time,
-      };
-    case "SET_BLACK_TIME":
-      return {
-        ...state,
-        blackInitialTime: action.time,
-      };
-    case "SET_MODIFIER":
-      return {
-        ...state,
-        modifier: action.time,
-      };
-    case "RESET:CHESS":
-      return initialState;
-    default:
-      return state;
-  }
-};
+export const chessTimerSlice = createSlice({
+  name: "chessTimer",
+  initialState: initialState,
+  reducers: {
+    setInitialTime: (state, action) => ({
+      ...state,
+      initialTime: action.payload.time,
+    }),
+    setWhiteTime: (state, action) => ({
+      ...state,
+      whiteInitialTime: action.payload.time,
+    }),
+    setBlackTime: (state, action) => ({
+      ...state,
+      blackInitialTime: action.payload.time,
+    }),
+    setModifier: (state, action) => ({
+      ...state,
+      modifier: action.payload.modifier,
+    }),
+    resetChess: () => initialState,
+  },
+});
 
-export default reducer;
+export const {
+  resetChess,
+  setBlackTime,
+  setInitialTime,
+  setModifier,
+  setWhiteTime,
+} = chessTimerSlice.actions;
+
+export default chessTimerSlice.reducer;

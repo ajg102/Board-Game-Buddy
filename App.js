@@ -1,44 +1,47 @@
-import React, { useState } from "react";
-import { Provider } from "react-redux";
-import { PersistGate } from "redux-persist/es/integration/react";
-import { enableScreens } from "react-native-screens";
-import AppNav from "./navigator/AppNavigator";
-import { store, persistedStore } from "./store/configureStore";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+import React, { useCallback } from "react";
+import { StatusBar, View } from "react-native";
 import { Provider as PaperProvider } from "react-native-paper";
-import { Platform, StatusBar } from "react-native";
-import { SplashScreen } from "expo";
-import * as Font from "expo-font";
-import { AppLoading } from "expo";
+import { enableScreens } from "react-native-screens";
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import AppNav from "./navigator/AppNavigator";
+import { persistedStore, store } from "./store/configureStore";
 
 enableScreens();
 
-const loadFonts = () => {
-  return Font.loadAsync({
+SplashScreen.preventAutoHideAsync();
+
+export default function App() {
+  const [fontsLoaded] = useFonts({
     "open-sans": require("./assets/fonts/OpenSans-Regular.ttf"),
     "open-sans-bold": require("./assets/fonts/OpenSans-Bold.ttf"),
     "open-sans-extra-bold": require("./assets/fonts/OpenSans-ExtraBold.ttf"),
   });
-};
 
-export default function App() {
-  //dev only
-  // SplashScreen.preventAutoHide();
-  // setTimeout(SplashScreen.hide, 20000);
-  //
-  const [dataLoaded, setDataLoaded] = useState(false);
-  if (!dataLoaded) {
-    return (
-      <AppLoading startAsync={loadFonts} onFinish={() => setDataLoaded(true)} />
-    );
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
+
+  if (!fontsLoaded) {
+    return null;
   }
+
   return (
     <Provider store={store}>
       <PersistGate persistor={persistedStore} loading={null}>
         <PaperProvider>
-          <StatusBar
-            barStyle={Platform.OS === "ios" ? "light-content" : "light-content"}
-          />
-          <AppNav />
+          <View onLayout={onLayoutRootView} style={{ flex: 1 }}>
+            <StatusBar
+              barStyle={
+                Platform.OS === "ios" ? "light-content" : "light-content"
+              }
+            />
+            <AppNav />
+          </View>
         </PaperProvider>
       </PersistGate>
     </Provider>

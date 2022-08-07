@@ -1,3 +1,5 @@
+import { createSlice } from "@reduxjs/toolkit";
+
 const initialState = {
   scores: {
     p1: 8000,
@@ -5,18 +7,20 @@ const initialState = {
   },
 };
 
-const reducer = (state = initialState, action) => {
-  switch (action.type) {
-    case "LIFEPOINTS:UPDATE":
+const lifepointsSlice = createSlice({
+  name: "lifepoints",
+  initialState: initialState,
+  reducers: {
+    update: (state, action) => {
       return {
         ...state,
-        scores: { ...state.scores, ...action.update },
+        scores: { ...state.scores, ...action.payload.update },
       };
-    case "LIFEPOINTS:RESET":
-      return initialState;
-    default:
-      return state;
-  }
-};
+    },
+    reset: () => initialState,
+  },
+});
 
-export default reducer;
+export const { update, reset } = lifepointsSlice.actions;
+
+export default lifepointsSlice.reducer;

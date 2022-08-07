@@ -1,3 +1,5 @@
+import { createSlice } from "@reduxjs/toolkit";
+
 const initialState = {
   screens: [
     { label: "Life Points", nav: "LifePoints", fav: false },
@@ -8,42 +10,42 @@ const initialState = {
     { label: "Chess Timer", nav: "ChessTimer", fav: false },
     { label: "DnD Dice Roller", nav: "DnD", fav: false },
     { label: "Timer", nav: "Timer", fav: false },
-    { label: "Sketch Canvas", nav: "Sketch", fav: false },
+    // { label: "Sketch Canvas", nav: "Sketch", fav: false },
     { label: "Hearts", nav: "Hearts", fav: false },
-    // { label: "Bracket", nav: "Bracket", fav: false },
-    { label: "Spades", nav: "Spades", fav: false },
+    { label: "Darts", nav: "Darts", fav: false },
   ],
 };
 
-const reducer = (state = initialState, action) => {
-  switch (action.type) {
-    case "FAVORITES:ADD": {
-      let screens = [...state.screens];
-      let index = screens.findIndex((item) => item.nav === action.key);
-      let updatedScreen = { ...screens[index], fav: true };
+const screensSlice = createSlice({
+  name: "screens",
+  initialState: initialState,
+  reducers: {
+    add: (state, action) => {
+      const screens = [...state.screens];
+      const index = screens.findIndex((item) => item.nav === action.payload);
+      const updatedScreen = { ...screens[index], fav: true };
       screens.splice(index, 1);
       screens.push(updatedScreen);
       return {
         ...state,
         screens: screens,
       };
-    }
-    case "FAVORITES:REMOVE": {
-      let screens = [...state.screens];
-      let index = screens.findIndex((item) => item.nav === action.key);
-      let updatedScreen = { ...screens[index], fav: false };
+    },
+    remove: (state, action) => {
+      const screens = [...state.screens];
+      const index = screens.findIndex((item) => item.nav === action.payload);
+      const updatedScreen = { ...screens[index], fav: false };
       screens.splice(index, 1);
       screens.push(updatedScreen);
       return {
         ...state,
         screens: screens,
       };
-    }
-    case "RESET":
-      return initialState;
-    default:
-      return state;
-  }
-};
+    },
+    reset: () => initialState,
+  },
+});
 
-export default reducer;
+export const { add, remove, reset } = screensSlice.actions;
+
+export default screensSlice.reducer;

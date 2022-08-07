@@ -1,28 +1,26 @@
-import React from "react";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { DrawerContentScrollView } from "@react-navigation/drawer";
-import { View, Text } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import React from "react";
+import { Text, View } from "react-native";
 import { useSelector } from "react-redux";
 import NativeTouchable from "../NativeTouchable";
 import { styles } from "./styles";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
+
+const sortScreens = (a, b) => {
+  if (a.label > b.label) return 1;
+  if (a.label < b.label) return -1;
+  return 0;
+};
 
 const CustomDrawer = (props) => {
   const screensState = useSelector((state) => state.screens.screens);
   const favoriteScreens = screensState
     .filter((item) => item.fav)
-    .sort((a, b) => {
-      if (a.label > b.label) return 1;
-      if (a.label < b.label) return -1;
-      return 0;
-    });
+    .sort(sortScreens);
   const otherScreens = screensState
     .filter((item) => !item.fav)
-    .sort((a, b) => {
-      if (a.label > b.label) return 1;
-      if (a.label < b.label) return -1;
-      return 0;
-    });
+    .sort(sortScreens);
   return (
     <>
       <LinearGradient
