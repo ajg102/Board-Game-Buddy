@@ -10,8 +10,11 @@ const initialState = {
     { label: "Timer", nav: "Timer", fav: false },
     { label: "Sketch Canvas", nav: "Sketch", fav: false },
     { label: "Hearts", nav: "Hearts", fav: false },
+    { label: "Darts", nav: "Darts", fav: false },
+    { label: "Counters", nav: "Counters", fav: false },
     // { label: "Bracket", nav: "Bracket", fav: false },
-    { label: "Spades", nav: "Spades", fav: false },
+    // { label: "Spades", nav: "Spades", fav: false },
+    { label: "Chooser", nav: "Chooser", fav: false },
   ],
 };
 

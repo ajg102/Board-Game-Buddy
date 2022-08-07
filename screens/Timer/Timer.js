@@ -14,8 +14,6 @@ import * as Haptics from "expo-haptics";
 import { NumericKeypad } from "../../components/Keypad";
 import { reverseString } from "../../helpers/utils";
 import { Audio } from "expo-av";
-import { Notifications } from "expo";
-import * as Permissions from "expo-permissions";
 import { useKeepAwake } from "expo-keep-awake";
 
 function formatDigit(string) {
@@ -27,7 +25,7 @@ function formatDigit(string) {
   } else return string;
 }
 
-const soundObject = new Audio.Sound();
+//const soundObject = new Audio.Sound();
 
 const formatNumber = (number) => `0${number}`.slice(-2);
 const formatMS = (ms) => `${ms}`.substring(0, 2);
@@ -52,14 +50,14 @@ const radius = (size - strokeWidth) / 2;
 const circumference = 2 * Math.PI * radius;
 
 const Timer = (props) => {
-  useKeepAwake();
+  //useKeepAwake();
 
   const [timer, setTimer] = useState(null); //total time on timer as date
   const [timeLeft, setTimeLeft] = useState(null); //time left on timer
 
-  const [hours, setHours] = useState("00");
-  const [minutes, setMinutes] = useState("00");
-  const [seconds, setSeconds] = useState("00");
+  const [hours, setHours] = useState("00"); //string value entered by user
+  const [minutes, setMinutes] = useState("00"); //string value entered by user
+  const [seconds, setSeconds] = useState("00"); //string value entered by user
 
   const [time, setTime] = useState(""); //string value entered by user
 
@@ -134,6 +132,12 @@ const Timer = (props) => {
     setHours(reverseString(formatDigit(time.substring(4, 6))));
   }, [time]);
 
+  // useEffect(() => {
+  //   if (timeLeft <= 0) {
+  //     setDone(true);
+  //   }
+  // }, [timeLeft]);
+
   useEffect(() => {
     let interval = null;
     if (running && !done) {
@@ -182,9 +186,9 @@ const Timer = (props) => {
       parseInt(seconds) * 1000 +
       60000 * parseInt(minutes) +
       3600000 * parseInt(hours);
-    setTimer(new Date(Date.now() + totalTime));
-    setTimeLeft(new Date(Date.now() + totalTime));
-    setRunning(true);
+    //setTimer(new Date(Date.now() + totalTime));
+    //setTimeLeft(new Date(Date.now() + totalTime));
+    //setRunning(true);
     // Animated.timing(circleProgress, {
     //   useNativeDriver: true,
     //   toValue: 1,

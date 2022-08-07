@@ -6,6 +6,7 @@
     "version": "1.0.0",
     "orientation": "default",
     "icon": "./assets/icon.png",
+    "primaryColor": "#FE6B8B",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "cover",
@@ -14,23 +15,33 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
+    "notification": {
+      "icon": "./assets/notif.png"
+    },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "bundleIdentifier": "com.gametools",
+      "bundleIdentifier": "com.alexg.gametools",
       "buildNumber": "1.0.0",
       "supportsTablet": true,
       "infoPlist": {
         "NSPhotoLibraryAddUsageDescription": "The app would like your permission to save your drawings to your photo library."
       }
     },
+    "androidStatusBar": {
+      "barStyle": "light-content",
+      "backgroundColor": "#FE6B8B"
+    },
     "android": {
-      "package": "com.gametools",
-      "versionCode": 1,
+      "package": "com.alexg.gametools",
+      "useNextNotificationsApi": true,
+      "versionCode": 2,
+      "allowBackup": false,
       "adaptiveIcon": {
         "foregroundImage": "./assets/android_icon.png",
         "backgroundImage": "./assets/android_background.png",
         "backgroundColor": "#fff"
       }
-    }
+    },
+    "description": ""
   }
 }

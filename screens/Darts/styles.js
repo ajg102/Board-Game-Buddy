@@ -27,7 +27,7 @@ export const styles = StyleSheet.create({
   },
   cricketHeaderText: {
     fontSize: 20,
-    fontWeight: "bold",
+    fontWeight: "700",
   },
   dartImageContainer: {
     width: "100%",
@@ -43,9 +43,10 @@ export const styles = StyleSheet.create({
   },
   teamHeader: {
     height: "100%",
-    width: "50%",
+    width: width * 0.5,
     borderBottomWidth: 2,
-    padding: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 4,
     alignItems: "center",
     justifyContent: "space-between",
   },

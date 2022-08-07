@@ -1,36 +1,86 @@
-import { StyleSheet, Dimensions } from "react-native";
-import { size } from "../../helpers/normalize";
+import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#eee",
   },
-  rowItem: {
+  sectionHeader: {
     width: "100%",
-    height: size(50),
+    height: 56,
+    backgroundColor: "#eee",
     paddingHorizontal: 16,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    justifyContent: "flex-end",
+    paddingVertical: 8,
+    borderBottomWidth: 2,
+    borderBottomColor: "#aaa",
   },
-  divider: {
-    height: 0,
-    width: "100%",
-    borderWidth: 0.25,
-    borderColor: "orange",
-  },
-  labelStyle: {
-    fontSize: 16,
-    color: "black",
+  headerText: {
+    textAlign: "left",
+    textAlignVertical: "bottom",
+    fontSize: 14,
+    color: "#aaa",
     fontFamily: "open-sans",
   },
-  header: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: "white",
-    opacity: 0.87,
-    paddingVertical: 16,
+  rowItem: {
+    backgroundColor: "white",
+    flexDirection: "row",
+    alignItems: "center",
+    width: "100%",
+    height: 48,
     paddingHorizontal: 16,
-    fontFamily: "open-sans-extra-bold",
+    justifyContent: "space-between",
+    borderBottomWidth: 1,
+    borderColor: "#eee",
+  },
+  textLabel: {
+    color: "black",
+    opacity: 0.6,
+    fontFamily: "open-sans",
+  },
+  textData: {
+    color: "black",
+    opacity: 0.87,
+    fontSize: 15,
+    fontFamily: "open-sans",
+  },
+  save: {
+    color: "blue",
+    opacity: 0.87,
+    fontFamily: "open-sans",
+  },
+  penColorButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: "#ccc",
+  },
+  historyItem: {
+    width: "100%",
+    borderBottomWidth: 0.5,
+    flexDirection: "row",
+    alignItems: "center",
+    flexWrap: "wrap",
+    padding: 12,
+  },
+  historyItemText: {
+    fontSize: 15,
+    fontFamily: "open-sans",
+  },
+  input: {
+    flex: 1,
+    height: "90%",
+    marginLeft: 12,
+    borderWidth: 1,
+    fontFamily: "open-sans",
+    textAlignVertical: "center",
+    textAlign: "right",
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    borderColor: "white",
+  },
+  inputError: {
+    borderColor: "red",
   },
 });

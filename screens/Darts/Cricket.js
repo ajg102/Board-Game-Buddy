@@ -242,7 +242,22 @@ const Cricket = (props) => {
           onPress={() => toggleNameChangeOverlay(1)}
           style={styles.teamHeader}
         >
-          <Text style={styles.cricketHeaderText}>{team1Name}</Text>
+          <Text
+            numberOfLines={2}
+            lineBreakMode="tail"
+            style={styles.cricketHeaderText}
+          >
+            {team1Name}
+          </Text>
+          {/* {cricketState.team1.num_throw > 0 && (
+            <Text style={styles.cricketHeaderText}>
+              {`${Math.ceil(
+                ((cricketState.team1.num_throw - cricketState.team1.num_miss) /
+                  cricketState.team1.num_throw) *
+                  100
+              )}%`}
+            </Text>
+          )} */}
           {turnPlayer === 1 && (
             <View style={styles.dartImageContainer}>
               <Image
@@ -276,7 +291,23 @@ const Cricket = (props) => {
           onPress={() => toggleNameChangeOverlay(2)}
           style={styles.teamHeader}
         >
-          <Text style={styles.cricketHeaderText}>{team2Name}</Text>
+          <Text
+            numberOfLines={2}
+            lineBreakMode="tail"
+            style={styles.cricketHeaderText}
+          >
+            {team2Name}
+          </Text>
+          {/* {cricketState.team2.num_throw > 0 && (
+            <Text style={styles.cricketHeaderText}>
+              {`${Math.ceil(
+                ((cricketState.team2.num_throw - cricketState.team2.num_miss) /
+                  cricketState.team2.num_throw) *
+                  100
+              )}%`}
+            </Text>
+          )} */}
+
           {turnPlayer === 2 && (
             <View style={styles.dartImageContainer}>
               <Image

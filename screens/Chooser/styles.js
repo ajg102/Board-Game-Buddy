@@ -1,0 +1,72 @@
+import { StyleSheet } from "react-native";
+
+export const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#171717",
+  },
+  input: {
+    height: 50,
+    borderBottomWidth: 3,
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+    paddingHorizontal: 12,
+    flex: 1,
+    borderColor: "#FF8E53",
+    backgroundColor: "white",
+    marginHorizontal: 12,
+    fontFamily: "open-sans",
+    fontSize: 17,
+  },
+  header: {
+    width: "100%",
+    height: 72,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  teamButton: {
+    backgroundColor: "#FF8E53",
+    borderWidth: 3,
+    height: 50,
+    width: 80,
+    borderColor: "white",
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  menuButton: {
+    width: 50,
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  addPlayerButton: {
+    alignSelf: "center",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "90%",
+    height: 56,
+    borderRadius: 8,
+    marginTop: 16,
+  },
+  addPlayerButtonText: {
+    fontFamily: "open-sans-bold",
+    fontSize: 20,
+    color: "white",
+  },
+  scrollContainer: {
+    width: "90%",
+    padding: 16,
+    flexDirection: "row",
+    marginVertical: 16,
+    alignItems: "center",
+    justifyContent: "space-evenly",
+    flexWrap: "wrap",
+  },
+  playerNameText: {
+    color: "white",
+    fontSize: 20,
+    fontFamily: "open-sans-bold",
+    margin: 16,
+  },
+});

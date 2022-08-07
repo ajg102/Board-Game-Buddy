@@ -4,10 +4,13 @@ import { styles } from "./styles";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { MaterialHeaderButton } from "../../components/NavHeaderButtons";
 import { LinearGradient } from "expo-linear-gradient";
+import { useDispatch, useSelector } from "react-redux";
 import Coin from "./Coin";
 
 const CoinFlip = (props) => {
   const { navigation } = props;
+  const dispatch = useDispatch();
+  const face = useSelector((state) => state.settings.coinFlip.coinFace);
   const [isFlipping, setIsFlipping] = useState(false);
   const [numCoins, setNumCoins] = useState([React.createRef()]);
   const [numHeads, setNumHeads] = useState(0);
@@ -19,6 +22,11 @@ const CoinFlip = (props) => {
         <HeaderButtons HeaderButtonComponent={MaterialHeaderButton}>
           <Item iconName="plus" title="add" onPress={addCoin} />
           <Item iconName="minus" title="subtract" onPress={subtractCoin} />
+          <Item
+            iconName="settings"
+            title="settings"
+            onPress={openCoinSettings}
+          />
         </HeaderButtons>
       ),
     });
@@ -40,14 +48,26 @@ const CoinFlip = (props) => {
     setNumCoins(data);
   };
 
+  const openCoinSettings = () => {
+    navigation.navigate("Settings", { lastScreen: "Coin" });
+  };
+
   const flipAll = () => {
     const flips = numCoins.map((ref) => {
       return ref.current.flipCoinAsync();
     });
     Promise.all(flips)
       .then(() => {
-        getCoinValuesHandler();
+        const { heads, tails } = getCoinValuesHandler();
         setIsFlipping(false);
+        dispatch({
+          type: "HISTORY:ADD",
+          key: "coinFlip",
+          record: {
+            created: Date.now(),
+            results: `Heads: ${heads} Tails: ${tails}`,
+          },
+        });
       })
       .catch((err) => {
         console.log(err);
@@ -60,12 +80,13 @@ const CoinFlip = (props) => {
     for (var i = 0; i < numCoins.length; i++) {
       if (numCoins[i].current.state.value === 0) {
         heads.push(1);
-      } else {
+      } else if (numCoins[i].current.state.value === 1) {
         tails.push(1);
       }
     }
     setNumHeads(heads.length);
     setNumTails(tails.length);
+    return { heads: heads.length, tails: tails.length };
   };
 
   const onFlipFinishedHandler = () => {
@@ -86,6 +107,7 @@ const CoinFlip = (props) => {
           <Coin
             key={index + ""}
             ref={ref}
+            face={face}
             onStartFlip={() => setIsFlipping(true)}
             onFlipFinished={onFlipFinishedHandler}
             numCoins={numCoins.length}

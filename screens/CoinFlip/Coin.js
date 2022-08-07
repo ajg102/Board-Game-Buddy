@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import {
   View,
-  Text,
   Animated,
   TouchableWithoutFeedback,
   Easing,
@@ -16,28 +15,29 @@ class Coin extends Component {
   }
 
   state = {
-    value: 0, //0 = heads,
-    set: "og",
+    value: -1, //0 = heads, 1= tails,
+    //set: "og",
+    hasFlipped: false,
+    isFlipping: false,
   };
 
   flipCoinAsync = async () => {
+    this.setState({ isFlipping: true });
     const promise = new Promise((resolve) => {
       this.flip.setValue(0);
       this.props.onStartFlip();
       const headsOrTails = Math.floor(Math.random() * 2);
-      Animated.sequence([
-        Animated.timing(this.flip, {
-          duration: 500,
-          toValue: 4,
-          easing: Easing.linear,
-          useNativeDriver: true,
-        }),
-        Animated.spring(this.flip, {
-          useNativeDriver: true,
-          toValue: headsOrTails === 0 ? 4 : 5,
-        }),
-      ]).start(() => {
-        this.setState({ value: headsOrTails });
+      Animated.timing(this.flip, {
+        duration: 650,
+        toValue: headsOrTails === 0 ? 6 : 7,
+        easing: Easing.bezier(0.645, 0.045, 0.355, 1),
+        useNativeDriver: true,
+      }).start(() => {
+        this.setState({
+          value: headsOrTails,
+          hasFlipped: true,
+          isFlipping: false,
+        });
         //this.props.onFlipFinished();
         resolve();
       });
@@ -46,22 +46,21 @@ class Coin extends Component {
   };
 
   flipCoin = () => {
+    this.setState({ isFlipping: true });
     this.flip.setValue(0);
     this.props.onStartFlip();
     const headsOrTails = Math.floor(Math.random() * 2);
-    Animated.sequence([
-      Animated.timing(this.flip, {
-        duration: 500,
-        toValue: 4,
-        easing: Easing.linear,
-        useNativeDriver: true,
-      }),
-      Animated.spring(this.flip, {
-        useNativeDriver: true,
-        toValue: headsOrTails === 0 ? 4 : 5,
-      }),
-    ]).start(() => {
-      this.setState({ value: headsOrTails });
+    Animated.timing(this.flip, {
+      duration: 650,
+      toValue: headsOrTails === 0 ? 6 : 7,
+      easing: Easing.bezier(0.645, 0.045, 0.355, 1),
+      useNativeDriver: true,
+    }).start(() => {
+      this.setState({
+        value: headsOrTails,
+        hasFlipped: true,
+        isFlipping: false,
+      });
       this.props.onFlipFinished();
     });
   };
@@ -75,20 +74,24 @@ class Coin extends Component {
       outputRange: ["180deg", "360deg", "-180deg", "0deg", "180deg", "360deg"],
     });
     return (
-      <TouchableWithoutFeedback onPress={this.flipCoin}>
+      <TouchableWithoutFeedback
+        disabled={this.state.isFlipping}
+        onPress={this.flipCoin}
+      >
         <View>
           <Animated.View
             style={[
               styles.flipFront,
               sizeCoins(this.props.numCoins),
-              { transform: [{ rotateX: front }] },
+              {
+                transform: [{ rotateX: front }],
+                opacity:
+                  this.state.hasFlipped || this.state.isFlipping ? 1 : 0.4,
+              },
             ]}
           >
-            {/* <Text style={styles.labelStyle}>
-              {this.props.numCoins > 4 ? "H" : "HEADS"}
-            </Text> */}
             <Image
-              source={coinFaceSets[this.state.set].heads}
+              source={coinFaceSets[this.props.face].heads}
               style={{ width: "100%", height: "100%", resizeMode: "cover" }}
             />
           </Animated.View>
@@ -101,12 +104,9 @@ class Coin extends Component {
             ]}
           >
             <Image
-              source={coinFaceSets[this.state.set].tails}
+              source={coinFaceSets[this.props.face].tails}
               style={{ width: "100%", height: "100%", resizeMode: "cover" }}
             />
-            {/* <Text style={styles.labelStyle}>
-              {this.props.numCoins > 4 ? "T" : "TAILS"}
-            </Text> */}
           </Animated.View>
         </View>
       </TouchableWithoutFeedback>

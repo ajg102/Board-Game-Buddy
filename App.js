@@ -6,7 +6,6 @@ import AppNav from "./navigator/AppNavigator";
 import { store, persistedStore } from "./store/configureStore";
 import { Provider as PaperProvider } from "react-native-paper";
 import { Platform, StatusBar } from "react-native";
-import { SplashScreen } from "expo";
 import * as Font from "expo-font";
 import { AppLoading } from "expo";
 
@@ -35,9 +34,7 @@ export default function App() {
     <Provider store={store}>
       <PersistGate persistor={persistedStore} loading={null}>
         <PaperProvider>
-          <StatusBar
-            barStyle={Platform.OS === "ios" ? "light-content" : "light-content"}
-          />
+          <StatusBar barStyle={"light-content"} />
           <AppNav />
         </PaperProvider>
       </PersistGate>

@@ -67,6 +67,7 @@ export const styles = StyleSheet.create({
 });
 
 export const dieFaceSet = {
+  "-1": require("../../assets/dice_1.png"),
   "1": require("../../assets/dice_1.png"),
   "2": require("../../assets/dice_2.png"),
   "3": require("../../assets/dice_3.png"),

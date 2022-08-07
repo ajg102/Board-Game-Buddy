@@ -10,9 +10,13 @@ import {
 import { useSelector } from "react-redux";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { styles } from "./styles";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import { size } from "../../helpers/normalize";
-import { useKeepAwake } from "expo-keep-awake";
+import {
+  useKeepAwake,
+  activateKeepAwake,
+  deactivateKeepAwake,
+} from "expo-keep-awake";
 import { LinearGradient } from "expo-linear-gradient";
 
 const formatNumber = (number) => `0${number}`.slice(-2);
@@ -29,7 +33,17 @@ const formatTime = (time) => {
 };
 
 const ChessClock = (props) => {
-  useKeepAwake();
+  //useKeepAwake();
+
+  useFocusEffect(
+    useCallback(() => {
+      activateKeepAwake("chess");
+
+      return () => deactivateKeepAwake("chess");
+    }, [])
+  );
+
+  const delayInterval = useRef();
   const { navigation, route } = props;
   const { mode = "normal", modifier = "delay" } = route.params;
   const chessTimer = useSelector((state) => state.chessTimer);
@@ -44,6 +58,13 @@ const ChessClock = (props) => {
   );
   const [blackMoves, setBlackMoves] = useState(0);
   const [whiteMoves, setWhiteMoves] = useState(0);
+
+  const [delay, setDelay] = useState(chessTimer.modifier);
+  const [delayActive, setDelayActive] = useState(false);
+
+  const resetDelay = () => {
+    setDelay(chessTimer.modifier);
+  };
 
   useFocusEffect(
     useCallback(() => {
@@ -85,6 +106,18 @@ const ChessClock = (props) => {
     return () => clearInterval(interval);
   }, [gameStarted, whiteTime, turnPlayer, clockRunning]);
 
+  useEffect(() => {
+    let interval = null;
+    if (gameStarted && clockRunning && delayActive) {
+      interval = setInterval(() => {
+        setDelay((prev) => prev - 1);
+      }, 1000);
+    } else if (!gameStarted || !delayActive) {
+      clearInterval(interval);
+    }
+    return () => clearInterval(interval);
+  }, [gameStarted, delayActive, clockRunning]);
+
   const resetHandler = () => {
     Alert.alert("Reset Timer", "Do you want to reset the timer?", [
       {
@@ -110,6 +143,7 @@ const ChessClock = (props) => {
   const onStartGame = () => {
     setGameStarted(true);
     if (whiteMoves === 0) {
+      setDelay(0);
       setClockRunning("white");
     }
   };
@@ -127,6 +161,7 @@ const ChessClock = (props) => {
 
   const onPassTurn = (color) => {
     if (!gameStarted) return;
+    resetDelay();
     if (color === "white") {
       if (modifier === "increment" && blackMoves !== 0) {
         setBlackTime((prev) => prev + chessTimer.modifier);
@@ -134,7 +169,12 @@ const ChessClock = (props) => {
       setWhiteMoves((prev) => prev + 1);
       setTurnPlayer("black");
       if (modifier === "delay") {
-        setTimeout(() => setClockRunning("black"), chessTimer.modifier * 1000);
+        setDelayActive(true);
+        setTimeout(() => {
+          setClockRunning("black");
+          setDelayActive(false);
+          setDelay(0);
+        }, chessTimer.modifier * 1000);
       } else {
         setClockRunning("black");
       }
@@ -145,7 +185,12 @@ const ChessClock = (props) => {
       setBlackMoves((prev) => prev + 1);
       setTurnPlayer("white");
       if (modifier === "delay") {
-        setTimeout(() => setClockRunning("white"), chessTimer.modifier * 1000);
+        setDelayActive(true);
+        setTimeout(() => {
+          setClockRunning("white");
+          setDelayActive(false);
+          setDelay(0);
+        }, chessTimer.modifier * 1000);
       } else {
         setClockRunning("white");
       }
@@ -159,6 +204,7 @@ const ChessClock = (props) => {
         timeRemaining={blackTime}
         moves={blackMoves}
         active={gameStarted && turnPlayer === "black"}
+        delay={modifier === "delay" ? delay : 0}
         onPassTurn={() => onPassTurn("black")}
       />
       <View style={styles.clockMenu}>
@@ -195,6 +241,7 @@ const ChessClock = (props) => {
         timeRemaining={whiteTime}
         moves={whiteMoves}
         active={gameStarted && turnPlayer === "white"}
+        delay={modifier === "delay" ? delay : 0}
         onPassTurn={() => onPassTurn("white")}
       />
     </SafeAreaView>
@@ -208,9 +255,11 @@ const ClockItem = ({
   timeRemaining = 0,
   moves = 0,
   active = false,
+  delay = 0,
   onPassTurn,
 }) => {
   const { hours, mins, secs } = formatTime(timeRemaining);
+  const { hours: h, mins: m, secs: s } = formatTime(delay);
   return (
     <TouchableOpacity
       disabled={!active}
@@ -239,6 +288,11 @@ const ClockItem = ({
       <Text style={styles.clockItemTime}>{`${
         hours !== "00" ? hours + ":" : ""
       }${mins}:${secs}`}</Text>
+      {active && delay > 0 && (
+        <Text style={styles.clockItemMoves}>
+          DELAY: {`${h !== "00" ? h + ":" : ""}${m}:${s}`}
+        </Text>
+      )}
       <Text style={styles.clockItemMoves}>MOVES: {moves}</Text>
     </TouchableOpacity>
   );

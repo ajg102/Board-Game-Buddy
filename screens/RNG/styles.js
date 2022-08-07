@@ -5,6 +5,7 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     //justifyContent: "center",
+    backgroundColor: "white",
     alignItems: "center",
   },
   inputContainer: {
@@ -22,10 +23,11 @@ export const styles = StyleSheet.create({
     textAlign: "center",
     fontFamily: "open-sans",
     borderBottomWidth: 1.5,
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
-    backgroundColor: "#eee",
-    borderColor: "#FF8E53",
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
+    backgroundColor: "#f9f9f9",
+    borderColor: "#eee",
+    borderBottomColor: "#FF8E53",
   },
   inputLabelContainer: {
     width: Dimensions.get("screen").width * 0.5,

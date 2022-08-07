@@ -52,7 +52,7 @@ export const styles = StyleSheet.create({
   footerButton: {
     flex: 1,
     height: "100%",
-    justifyContent: "center",
+    justifyContent: "flex-start",
     alignItems: "center",
   },
   footerButtonText: {
@@ -60,6 +60,7 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     fontFamily: "open-sans-bold",
+    color: "#FE6B8B",
   },
   timerCountdownText: {
     position: "absolute",

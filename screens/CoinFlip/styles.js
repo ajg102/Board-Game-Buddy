@@ -102,7 +102,13 @@ export const sizeCoins = (num) => {
 
 export const coinFaceSets = {
   og: {
+    title: "Standard Coin",
     heads: require("../../assets/coin_faces/heads-og.png"),
     tails: require("../../assets/coin_faces/tails-og.png"),
+  },
+  basic: {
+    title: "Blue and Red",
+    heads: require("../../assets/coin_faces/heads-basic.png"),
+    tails: require("../../assets/coin_faces/tails-basic.png"),
   },
 };

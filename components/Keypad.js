@@ -36,18 +36,14 @@ const Keypad = (props) => {
         <Digit digit={"000"} onPress={props.add} />
       </View>
       <View style={styles.rowItem}>
-        <View style={[styles.digit, { backgroundColor: "transparent" }]} />
+        {/* <View style={[styles.digit, { backgroundColor: "transparent" }]} /> */}
+        <TouchableOpacity style={styles.digit} onPress={props.half}>
+          <Text style={styles.text}>1/2</Text>
+        </TouchableOpacity>
         <TouchableOpacity style={styles.digit} onPress={props.backspace}>
           <Ionicons name={iconPre + "backspace"} size={40} color={"#f9f9f9"} />
         </TouchableOpacity>
-        {/* <TouchableOpacity
-          style={styles.digit}
-          onPress={() =>
-            alert("Hi there! Hope you are having an excellent day!")
-          }
-        >
-          <Ionicons name={iconPre + "happy"} size={40} color={"#f9f9f9"} />
-        </TouchableOpacity> */}
+
         <TouchableOpacity style={styles.digit} onPress={props.clear}>
           <Text style={styles.text}>Clr</Text>
         </TouchableOpacity>

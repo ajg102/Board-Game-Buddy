@@ -33,7 +33,7 @@ const CustomDrawer = (props) => {
       <DrawerContentScrollView {...props}>
         <NativeTouchable
           style={[styles.container, { justifyContent: "space-between" }]}
-          onPress={() => props.navigation.navigate("Settings")}
+          onPress={() => props.navigation.navigate("Favorites")}
         >
           <Text
             style={[

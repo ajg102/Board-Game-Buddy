@@ -147,7 +147,7 @@ const ChessTimer = (props) => {
       </TouchableOpacity>
       <Text style={styles.helperText}>
         {modifier === "increment"
-          ? "Add some extra time at the beginning of each players turn."
+          ? "Add some extra time at the beginning of each players turn from the second turn onward."
           : "Wait some time before beginning the timer at the start of a player's turn."}
       </Text>
       <TouchableOpacity onPress={onPlayHandler} style={styles.button}>

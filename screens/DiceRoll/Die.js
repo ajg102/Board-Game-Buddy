@@ -12,36 +12,35 @@ import { Menu, Divider } from "react-native-paper";
 
 const DIE_COLORS = [
   "white",
-  "#FF6900",
-  "#FCB900",
-  "#7BDCB5",
-  "#00D084",
-  "#8ED1FC",
-  "#0693E3",
-  "#ABB8C3",
+  "#F78DA7", //pink
+  "#EB144C", //red
+  "#FF6900", //orange
+  "#FCB900", //gold
+  "#7BDCB5", //teal
+  "#00D084", //green
+  "#8ED1FC", //light blue
+  "#0693E3", //blue
+  "#9900EF", //purple
+  "#8B4513", //brown
+  "#ABB8C3", //gray
   "black",
-  "#EB144C",
-  "#F78DA7",
-  "#9900EF",
 ];
 
 class Die extends Component {
   constructor(props) {
     super(props);
     this.animation = new Animated.Value(0);
-    // this.animationDuration = new Animated.Value(0);
-    // this.randomFaces = [
-    //   Math.ceil(Math.random() * 6),
-    //   Math.ceil(Math.random() * 6),
-    //   Math.ceil(Math.random() * 6),
-    //   Math.ceil(Math.random() * 6),
-    // ];
   }
   state = {
-    value: 6,
+    value: -1,
     isRolling: false,
     colorMenuOpen: false,
     color: "white",
+    hasRolled: false,
+  };
+
+  componentDidMount = () => {
+    this.setState({ color: this.props.color });
   };
 
   onLongPressHandler = () => {
@@ -110,7 +109,7 @@ class Die extends Component {
         ]),
       ]).start(() => {
         const result = Math.ceil(Math.random() * 6);
-        this.setState({ value: result, isRolling: false });
+        this.setState({ value: result, isRolling: false, hasRolled: true });
         resolve();
       });
     });
@@ -169,7 +168,7 @@ class Die extends Component {
       ]),
     ]).start(() => {
       const result = Math.ceil(Math.random() * 6);
-      this.setState({ value: result, isRolling: false });
+      this.setState({ value: result, isRolling: false, hasRolled: true });
     });
   };
 
@@ -193,6 +192,8 @@ class Die extends Component {
                     { translateY: this.animation },
                   ],
                   backgroundColor: this.state.color,
+                  opacity:
+                    this.state.hasRolled || this.state.isRolling ? 1 : 0.4,
                 },
               ]}
             >

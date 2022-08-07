@@ -7,13 +7,23 @@ import {
   Text,
   ScrollView,
   TextInput,
+  InputAccessoryView,
+  Button,
+  Platform,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { styles } from "./styles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
+import { FlatList } from "react-native-gesture-handler";
 
 const REGEX = /[^A-Za-z]/g;
+
+const id_1 = "min";
+const id_2 = "max";
+const id_3 = "num";
+
+const isAndroid = Platform.OS === "android";
 
 const RNG = (props) => {
   const [low, setLow] = useState("1");
@@ -86,6 +96,7 @@ const RNG = (props) => {
   };
   const generate = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    Keyboard.dismiss();
     const data = [];
     for (var i = 0; i < numGenerated; i++) {
       data.push(getRandomIntInclusive(low, hi));
@@ -111,130 +122,136 @@ const RNG = (props) => {
     }
   };
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <>
-        <View style={styles.container}>
-          <View style={styles.inputContainer}>
-            <TouchableOpacity
-              style={styles.plusButton}
-              onPressIn={() => onPressInPlus("low")}
-              onPressOut={onPressOut}
-            >
-              <LinearGradient
-                colors={["#FE6B8B", "#FF8E53"]}
-                locations={[0.3, 0.9]}
-                style={styles.buttonBackground}
-              >
-                <MaterialCommunityIcons name="plus" size={30} color="white" />
-              </LinearGradient>
-            </TouchableOpacity>
-            <View style={styles.inputLabelContainer}>
-              <Text style={styles.labelStyle}>Min Value</Text>
-              <TextInput
-                value={low}
-                style={styles.input}
-                keyboardType="numeric"
-                onChangeText={lowNumChangedHandler}
-              />
-            </View>
-
-            <TouchableOpacity
-              style={styles.minusButton}
-              onPressIn={() => onPressInMinus("low")}
-              onPressOut={onPressOut}
-            >
-              <MaterialCommunityIcons name="minus" size={30} color="white" />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.inputContainer}>
-            <TouchableOpacity
-              style={styles.plusButton}
-              onPressIn={() => onPressInPlus("hi")}
-              onPressOut={onPressOut}
-            >
-              <LinearGradient
-                colors={["#FE6B8B", "#FF8E53"]}
-                locations={[0.3, 0.9]}
-                style={styles.buttonBackground}
-              >
-                <MaterialCommunityIcons name="plus" size={30} color="white" />
-              </LinearGradient>
-            </TouchableOpacity>
-            <View style={styles.inputLabelContainer}>
-              <Text style={styles.labelStyle}>Max Value</Text>
-              <TextInput
-                value={hi}
-                style={styles.input}
-                keyboardType="numeric"
-                onChangeText={hiNumChangedHandler}
-              />
-            </View>
-
-            <TouchableOpacity
-              style={styles.minusButton}
-              onPressIn={() => onPressInMinus("hi")}
-              onPressOut={onPressOut}
-            >
-              <MaterialCommunityIcons name="minus" size={30} color="white" />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.inputContainer}>
-            <TouchableOpacity
-              style={styles.plusButton}
-              onPressIn={() => onPressInPlus("num")}
-              onPressOut={onPressOut}
-            >
-              <LinearGradient
-                colors={["#FE6B8B", "#FF8E53"]}
-                locations={[0.3, 0.9]}
-                style={styles.buttonBackground}
-              >
-                <MaterialCommunityIcons name="plus" size={30} color="white" />
-              </LinearGradient>
-            </TouchableOpacity>
-            <View style={styles.inputLabelContainer}>
-              <Text style={styles.labelStyle}>Number to generate</Text>
-              <TextInput
-                value={numGenerated}
-                style={styles.input}
-                keyboardType="numeric"
-                onChangeText={genNumChangedHandler}
-                onBlur={onNumChangedBlur}
-              />
-            </View>
-
-            <TouchableOpacity
-              style={styles.minusButton}
-              onPressIn={() => onPressInMinus("num")}
-              onPressOut={onPressOut}
-            >
-              <MaterialCommunityIcons name="minus" size={30} color="white" />
-            </TouchableOpacity>
-          </View>
-          <ScrollView
-            contentContainerStyle={styles.resultsContainer}
-            style={{ flex: 1 }}
+    // <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+    <View style={styles.container}>
+      <View style={styles.inputContainer}>
+        <TouchableOpacity
+          style={styles.plusButton}
+          onPressIn={() => onPressInPlus("low")}
+          onPressOut={onPressOut}
+        >
+          <LinearGradient
+            colors={["#FE6B8B", "#FF8E53"]}
+            locations={[0.3, 0.9]}
+            style={styles.buttonBackground}
           >
-            {results.map((item, index) => (
-              <Text key={index + ""} style={styles.result}>
-                {item}
-              </Text>
-            ))}
-          </ScrollView>
-          <View style={{ height: 96, width: "100%" }}>
-            <TouchableOpacity onPress={generate} style={styles.button}>
-              <LinearGradient
-                colors={["#FE6B8B", "#FF8E53"]}
-                locations={[0.3, 0.9]}
-                style={styles.buttonBackground}
-              >
-                <Text style={styles.buttonText}>GENERATE</Text>
-              </LinearGradient>
-            </TouchableOpacity>
-          </View>
+            <MaterialCommunityIcons name="plus" size={30} color="white" />
+          </LinearGradient>
+        </TouchableOpacity>
+        <View style={styles.inputLabelContainer}>
+          <Text style={styles.labelStyle}>Min Value</Text>
+          <TextInput
+            value={low}
+            style={styles.input}
+            keyboardType="numeric"
+            onChangeText={lowNumChangedHandler}
+            inputAccessoryViewID={id_1}
+          />
         </View>
-      </>
-    </TouchableWithoutFeedback>
+
+        <TouchableOpacity
+          style={styles.minusButton}
+          onPressIn={() => onPressInMinus("low")}
+          onPressOut={onPressOut}
+        >
+          <MaterialCommunityIcons name="minus" size={30} color="white" />
+        </TouchableOpacity>
+      </View>
+      <View style={styles.inputContainer}>
+        <TouchableOpacity
+          style={styles.plusButton}
+          onPressIn={() => onPressInPlus("hi")}
+          onPressOut={onPressOut}
+        >
+          <LinearGradient
+            colors={["#FE6B8B", "#FF8E53"]}
+            locations={[0.3, 0.9]}
+            style={styles.buttonBackground}
+          >
+            <MaterialCommunityIcons name="plus" size={30} color="white" />
+          </LinearGradient>
+        </TouchableOpacity>
+        <View style={styles.inputLabelContainer}>
+          <Text style={styles.labelStyle}>Max Value</Text>
+          <TextInput
+            value={hi}
+            style={styles.input}
+            keyboardType="numeric"
+            onChangeText={hiNumChangedHandler}
+            inputAccessoryViewID={id_1}
+          />
+        </View>
+
+        <TouchableOpacity
+          style={styles.minusButton}
+          onPressIn={() => onPressInMinus("hi")}
+          onPressOut={onPressOut}
+        >
+          <MaterialCommunityIcons name="minus" size={30} color="white" />
+        </TouchableOpacity>
+      </View>
+      <View style={styles.inputContainer}>
+        <TouchableOpacity
+          style={styles.plusButton}
+          onPressIn={() => onPressInPlus("num")}
+          onPressOut={onPressOut}
+        >
+          <LinearGradient
+            colors={["#FE6B8B", "#FF8E53"]}
+            locations={[0.3, 0.9]}
+            style={styles.buttonBackground}
+          >
+            <MaterialCommunityIcons name="plus" size={30} color="white" />
+          </LinearGradient>
+        </TouchableOpacity>
+        <View style={styles.inputLabelContainer}>
+          <Text style={styles.labelStyle}>Number to generate</Text>
+          <TextInput
+            value={numGenerated}
+            style={styles.input}
+            keyboardType="numeric"
+            onChangeText={genNumChangedHandler}
+            onBlur={onNumChangedBlur}
+            inputAccessoryViewID={id_1}
+          />
+        </View>
+
+        <TouchableOpacity
+          style={styles.minusButton}
+          onPressIn={() => onPressInMinus("num")}
+          onPressOut={onPressOut}
+        >
+          <MaterialCommunityIcons name="minus" size={30} color="white" />
+        </TouchableOpacity>
+      </View>
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={styles.resultsContainer}
+      >
+        {results.map((item, index) => (
+          <Text key={index + ""} style={styles.result}>
+            {item}
+          </Text>
+        ))}
+      </ScrollView>
+      <View style={{ height: 96, width: "100%" }}>
+        <TouchableOpacity onPress={generate} style={styles.button}>
+          <LinearGradient
+            colors={["#FE6B8B", "#FF8E53"]}
+            locations={[0.3, 0.9]}
+            style={styles.buttonBackground}
+          >
+            <Text style={styles.buttonText}>GENERATE</Text>
+          </LinearGradient>
+        </TouchableOpacity>
+      </View>
+      {!isAndroid && (
+        <InputAccessoryView nativeID={id_1} backgroundColor={"#dedede"}>
+          <Button title="Done" onPress={() => Keyboard.dismiss()} />
+        </InputAccessoryView>
+      )}
+    </View>
+    // </TouchableWithoutFeedback>
   );
 };
 
